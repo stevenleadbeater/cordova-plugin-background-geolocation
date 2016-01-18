@@ -152,9 +152,16 @@ Parameter | Type | Platform     | Description
 `option.notificationIconColor` | `String` optional| Android | The accent color to use for notification. Eg. **#4CAF50**.
 `option.notificationIcon` | `String` optional | Android | The filename of a custom notification icon. See android quirks. **NOTE:** Only available for API Level >=21.
 `option.locationService` | `Number` | Android | Set location service provider **@see** [wiki](https://github.com/mauron85/cordova-plugin-background-geolocation/wiki/Android-providers)
-`option.interval` | `Number` | Android | ANDROID_FUSED_LOCATION only. Rate in milliseconds at which your app prefers to receive location updates. @see [android docs](https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest.html#getInterval())
-`option.fastestInterval` | `Number` | Android | ANDROID_FUSED_LOCATION only. Fastest rate in milliseconds at which your app can handle location updates. **@see** [android  docs](https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest.html#getFastestInterval()).
 `option.activityType` | `String` | iOS | [AutomotiveNavigation, OtherNavigation, Fitness, Other] Presumably, this affects iOS GPS algorithm. **@see** [Apple docs](https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManager_Class/CLLocationManager/CLLocationManager.html#//apple_ref/occ/instp/CLLocationManager/activityType) for more information
+
+Following options are specific to provider as defined by locationService option
+### ANDROID_FUSED_LOCATION provider options
+
+Parameter | Type | Platform     | Description
+--------- | ---- | ------------ | -----------
+`option.interval` | `Number` | Android | Rate in milliseconds at which your app prefers to receive location updates. @see [android docs](https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest.html#getInterval())
+`option.fastestInterval` | `Number` | Android | Fastest rate in milliseconds at which your app can handle location updates. **@see** [android  docs](https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest.html#getFastestInterval()).
+`option.activitiesInterval` | `Number` | Android | Rate in milliseconds at which activity recognition occurs. Larger values will result in fewer activity detections while improving battery life.
 
 Success callback will be called with one argument - location object, which tries to mimic w3c [Coordinates interface](http://dev.w3.org/geo/api/spec-source.html#coordinates_interface).
 
@@ -163,18 +170,18 @@ Callback parameter | Type | Description
 `locationId` | `Number` | ID of location as stored in DB (or null)
 `serviceProvider` | `String` | Service provider
 `debug` | `Boolean` | true if location recorded as part of debug
-`time` | `Number` | Return the UTC time of this fix, in milliseconds since January 1, 1970.
-`latitude` | `Number` | Get the latitude, in degrees.
-`longitude` | `Number` | Get the longitude, in degrees.
-`accuracy` | `Number` | Get the estimated accuracy of this location, in meters.
-`speed` | `Number` | Get the speed if it is available, in meters/second over ground.
-`altitude` | `Number` | Get the altitude if available, in meters above the WGS 84 reference ellipsoid.
-`bearing` | `Number` | Get the bearing, in degrees.
+`time` | `Number` |UTC time of this fix, in milliseconds since January 1, 1970.
+`latitude` | `Number` | latitude, in degrees.
+`longitude` | `Number` | longitude, in degrees.
+`accuracy` | `Number` | estimated accuracy of this location, in meters.
+`speed` | `Number` | speed if it is available, in meters/second over ground.
+`altitude` | `Number` | altitude if available, in meters above the WGS 84 reference ellipsoid.
+`bearing` | `Number` | bearing, in degrees.
 
 
 ### backgroundGeoLocation.start()
 
-Start background gelocation.
+Start background geolocation.
 
 ### backgroundGeoLocation.stop()
 
@@ -183,7 +190,7 @@ Stop background geolocation.
 ### backgroundGeoLocation.isLocationEnabled(success, fail)
 NOTE: Android only
 
-One time check for status of location services. In case or error fail callback will be executed.
+One time check for status of location services. In case of error, fail callback will be executed.
 
 Success callback parameter | Type | Description
 -------------------------- | ---- | -----------
@@ -222,8 +229,8 @@ Success callback parameter | Type | Description
 Locations are stored when:
 
 1. ```config.stopOnTerminate``` is false and main activity was killed by the system
-
-2. ```config.stopOnTerminate``` is false and ```option.debug``` is true
+or
+2. ```option.debug``` is true
 
 Debug locations can be filtered:
 
@@ -316,6 +323,10 @@ To use custom notification icon eg. **new_icon**, you need to put icons **new_ic
 
 NOTE: Using custom icons is currently not possible with Adobe® PhoneGap™ Build, as there is no way how to copy icons into *res/drawable*.
 The workaround for payed plans is to create private res only plugin using [secondary-icon](https://github.com/kentmw/secondary-icon).
+
+### Intel XDK
+
+Plugin will not work in XDK emulator ('Unimplemented API Emulation: BackgroundGeoLocation.start' in emulator). But will work on real device.
 
 ## Debugging sounds
 |    | *ios* | *android* | *WP8* |

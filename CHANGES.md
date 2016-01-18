@@ -1,5 +1,32 @@
 ## Changelog
 
+### [0.9.1] - 2015-12-18
+#### Fixed
+- Android ANDROID_FUSED_LOCATION fix config setActivitiesInterval
+
+### [0.9.0] - 2015-12-18
+#### Changed
+- Android ANDROID_FUSED_LOCATION using ActivityRecognition (saving battery)
+
+### [0.8.3] - 2015-12-18
+#### Fixed
+- Android fixing crash on exit
+
+### [0.8.2] - 2015-12-18
+#### Fixed
+- Android fixing #9 - immediate bg service crash
+
+### [0.8.1] - 2015-12-15
+#### Fixed
+- Android fixing #9
+
+### [0.8.0] - 2015-12-15 (Merry XMas Edition :-)
+#### Fixed
+- Android persist location when main activity was killed
+
+#### Changed
+- Android persisting position when debug is on
+
 ### [0.7.3] - 2015-11-06
 #### Fixed
 - Android issue #11

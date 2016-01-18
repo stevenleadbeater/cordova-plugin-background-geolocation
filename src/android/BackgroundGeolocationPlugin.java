@@ -16,6 +16,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ComponentName;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -38,8 +39,8 @@ import com.tenforwardconsulting.cordova.bgloc.data.LocationProxy;
 
 import java.util.Collection;
 
-public class BackgroundGpsPlugin extends CordovaPlugin {
-    private static final String TAG = "BackgroundGpsPlugin";
+public class BackgroundGeolocationPlugin extends CordovaPlugin {
+    private static final String TAG = "BackgroundGeolocationPlugin";
 
     public static final String ACTION_START = "start";
     public static final String ACTION_STOP = "stop";
@@ -55,7 +56,9 @@ public class BackgroundGpsPlugin extends CordovaPlugin {
 
     private Config config = new Config();
     private Boolean isEnabled = false;
-    private Intent updateServiceIntent;
+    private Boolean isActionReceiverRegistered = false;
+    private Boolean isLocationModeChangeReceiverRegistered = false;
+    private Intent locationServiceIntent;
     private CallbackContext callbackContext;
     private CallbackContext locationModeChangeCallbackContext;
 
@@ -63,21 +66,25 @@ public class BackgroundGpsPlugin extends CordovaPlugin {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d(TAG, "Received location from bg service");
+            Bundle results = getResultExtras(true);
             Bundle data = intent.getExtras();
             switch (data.getInt(Constant.ACTION)) {
                 case Constant.ACTION_LOCATION_UPDATE:
                     try {
+                        Log.d(TAG, "Sending location update");
                         JSONObject location = new JSONObject(data.getString(Constant.DATA));
                         PluginResult result = new PluginResult(PluginResult.Status.OK, location);
                         result.setKeepCallback(true);
                         callbackContext.sendPluginResult(result);
-                        Log.d(TAG, "Sending plugin result");
+                        results.putString(Constant.LOCATION_SENT_INDICATOR, "OK");
                     } catch (JSONException e) {
+                        Log.w(TAG, "Error converting message to json");
                         PluginResult result = new PluginResult(PluginResult.Status.JSON_EXCEPTION);
                         result.setKeepCallback(true);
                         callbackContext.sendPluginResult(result);
-                        Log.w(TAG, "Error converting message to json");
+                        results.putString(Constant.LOCATION_SENT_INDICATOR, "ERROR");
                     }
+
                     break;
                 default:
                     break;
@@ -92,10 +99,9 @@ public class BackgroundGpsPlugin extends CordovaPlugin {
             if (locationModeChangeCallbackContext != null) {
                 PluginResult result;
                 try {
-                    int isLocationEnabled = BackgroundGpsPlugin.isLocationEnabled(context) ? 1 : 0;
+                    int isLocationEnabled = BackgroundGeolocationPlugin.isLocationEnabled(context) ? 1 : 0;
                     result = new PluginResult(PluginResult.Status.OK, isLocationEnabled);
                     result.setKeepCallback(true);
-                    callbackContext.success(isLocationEnabled);
                 } catch (SettingNotFoundException e) {
                     result = new PluginResult(PluginResult.Status.ERROR, "Location setting error occured");
                 }
@@ -109,34 +115,26 @@ public class BackgroundGpsPlugin extends CordovaPlugin {
         Context context = activity.getApplicationContext();
 
         if (ACTION_START.equals(action) && !isEnabled) {
+            Class serviceProviderClass = null;
+
             try {
-                updateServiceIntent = new Intent(activity, ServiceProvider.getClass(config.getServiceProvider()));
-                updateServiceIntent.addFlags(Intent.FLAG_FROM_BACKGROUND);
+                serviceProviderClass = ServiceProvider.getClass(config.getServiceProvider());
             } catch (ClassNotFoundException e) {
                 callbackContext.error("Configuration error: provider not found");
-                return false;
+                return true;
             }
 
-            IntentFilter intentFilter = new IntentFilter(Constant.ACTION_FILTER);
-            context.registerReceiver(actionReceiver, intentFilter);
-            String canonicalName = activity.getClass().getCanonicalName();
-
-            updateServiceIntent.putExtra("config", config);
-            updateServiceIntent.putExtra("activity", canonicalName);
-            Log.d( TAG, "Put activity " + canonicalName);
-
-            activity.startService(updateServiceIntent);
+            registerActionReceiver();
+            startBackgroundService(serviceProviderClass);
             // TODO: call success/fail callback
 
-            isEnabled = true;
-            Log.d(TAG, "bg service has been started");
-
+            return true;
         } else if (ACTION_STOP.equals(action)) {
-            context.unregisterReceiver(actionReceiver);
-            isEnabled = false;
-            activity.stopService(updateServiceIntent);
+            unregisterActionReceiver();
+            stopBackgroundService();
             callbackContext.success();
-            Log.d(TAG, "bg service has been stopped");
+
+            return true;
         } else if (ACTION_CONFIGURE.equals(action)) {
             try {
                 this.callbackContext = callbackContext;
@@ -145,52 +143,67 @@ public class BackgroundGpsPlugin extends CordovaPlugin {
                 // callbackContext.success(); //we cannot do this
             } catch (JSONException e) {
                 callbackContext.error("Configuration error: " + e.getMessage());
-                return false;
             }
+
+            return true;
         } else if (ACTION_SET_CONFIG.equals(action)) {
             // TODO reconfigure Service
             callbackContext.success();
             Log.d(TAG, "bg service reconfigured");
+
+            return true;
         } else if (ACTION_LOCATION_ENABLED_CHECK.equals(action)) {
             Log.d(TAG, "location services enabled check");
             try {
-                int isLocationEnabled = BackgroundGpsPlugin.isLocationEnabled(context) ? 1 : 0;
+                int isLocationEnabled = BackgroundGeolocationPlugin.isLocationEnabled(context) ? 1 : 0;
                 callbackContext.success(isLocationEnabled);
             } catch (SettingNotFoundException e) {
                 callbackContext.error("Location setting error occured");
-                return false;
             }
+
+            return true;
         } else if (ACTION_SHOW_LOCATION_SETTINGS.equals(action)) {
             showLocationSettings();
             // TODO: call success/fail callback
+
+            return true;
         } else if (REGISTER_MODE_CHANGED_RECEIVER.equals(action)) {
             this.locationModeChangeCallbackContext = callbackContext;
-            context.registerReceiver(locationModeChangeReceiver, new IntentFilter(LocationManager.MODE_CHANGED_ACTION));
+            registerLocationModeChangeReceiver();
             // TODO: call success/fail callback
+
+            return true;
         } else if (UNREGISTER_MODE_CHANGED_RECEIVER.equals(action)) {
-            context.unregisterReceiver(locationModeChangeReceiver);
+            unregisterLocationModeChangeReceiver();
             this.locationModeChangeCallbackContext = null;
             // TODO: call success/fail callback
+
+            return true;
         } else if (ACTION_GET_ALL_LOCATIONS.equals(action)) {
             try {
                 callbackContext.success(this.getAllLocations());
             } catch (JSONException e) {
                 callbackContext.error("Converting locations to JSON failed.");
             }
+
+            return true;
         } else if (ACTION_DELETE_LOCATION.equals(action)) {
             try {
                 this.deleteLocation(data.getInt(0));
                 callbackContext.success();
             } catch (JSONException e) {
                 callbackContext.error("Configuration error: " + e.getMessage());
-                return false;
             }
+
+            return true;
         } else if (ACTION_DELETE_ALL_LOCATIONS.equals(action)) {
             this.deleteAllLocations();
             callbackContext.success();
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -199,22 +212,78 @@ public class BackgroundGpsPlugin extends CordovaPlugin {
      */
      @Override
     public void onDestroy() {
-        super.onDestroy();
         Log.d(TAG, "Main Activity destroyed!!!");
         Activity activity = this.cordova.getActivity();
 
-        if (isEnabled) {
-            if (config.getStopOnTerminate()) {
-                Log.d(TAG, "Stopping bg service");
-                activity.stopService(updateServiceIntent);
-            } else {
-                //todo: send info to location service
-                Intent intent = new Intent(Constant.ACTION_FILTER);
-                intent.putExtra(Constant.ACTION, Constant.ACTION_ACTIVITY_KILLED);
-                intent.putExtra(Constant.DATA, true);
-                activity.sendBroadcast(intent);
-            }
+        cleanUp();
+
+        if (config.getStopOnTerminate()) {
+            stopBackgroundService();
         }
+
+        super.onDestroy();
+    }
+
+    public ComponentName startBackgroundService (Class serviceProviderClass) {
+        if (isEnabled) { return null; }
+
+        Activity activity = this.cordova.getActivity();
+        Log.d(TAG, "Starting bg service");
+
+        locationServiceIntent = new Intent(activity, serviceProviderClass);
+        locationServiceIntent.addFlags(Intent.FLAG_FROM_BACKGROUND);
+        // locationServiceIntent.putExtra("config", config.toParcel().marshall());
+        locationServiceIntent.putExtra("config", config);
+        isEnabled = true;
+
+        return activity.startService(locationServiceIntent);
+    }
+
+    public boolean stopBackgroundService () {
+        if (!isEnabled) { return false; }
+
+        Log.d(TAG, "Stopping bg service");
+        Activity activity = this.cordova.getActivity();
+        isEnabled = false;
+        return activity.stopService(locationServiceIntent);
+    }
+
+    public Intent registerActionReceiver () {
+        if (isActionReceiverRegistered) { return null; }
+
+        Context context = this.cordova.getActivity().getApplicationContext();
+        isActionReceiverRegistered = true;
+        return context.registerReceiver(actionReceiver, new IntentFilter(Constant.ACTION_FILTER));
+    }
+
+    public Intent registerLocationModeChangeReceiver () {
+        if (isLocationModeChangeReceiverRegistered) { return null; }
+
+        Context context = this.cordova.getActivity().getApplicationContext();
+        isLocationModeChangeReceiverRegistered = true;
+        return context.registerReceiver(locationModeChangeReceiver, new IntentFilter(LocationManager.MODE_CHANGED_ACTION));
+    }
+
+    public void unregisterActionReceiver () {
+        if (!isActionReceiverRegistered) { return; }
+
+        Context context = this.cordova.getActivity().getApplicationContext();
+        context.unregisterReceiver(actionReceiver);
+        isActionReceiverRegistered = false;
+    }
+
+    public void unregisterLocationModeChangeReceiver () {
+        if (!isLocationModeChangeReceiverRegistered) { return; }
+
+        Context context = this.cordova.getActivity().getApplicationContext();
+        context.unregisterReceiver(locationModeChangeReceiver);
+        isLocationModeChangeReceiverRegistered = false;
+    }
+
+    public void cleanUp() {
+        Context context = this.cordova.getActivity().getApplicationContext();
+        unregisterActionReceiver();
+        unregisterLocationModeChangeReceiver();
     }
 
     public void showLocationSettings() {
