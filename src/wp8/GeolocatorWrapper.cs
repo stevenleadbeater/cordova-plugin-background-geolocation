@@ -59,6 +59,8 @@ namespace Cordova.Extension.Commands
         /// </summary>
         private bool _skipNextPosition;
 
+        private bool _useFixedTimeInterval;
+
         private readonly PositionPath _positionPath;
         private readonly StationaryManager _stationaryManager;
         public bool IsActive { get; private set; }
@@ -75,7 +77,7 @@ namespace Cordova.Extension.Commands
         /// <param name="reportInterval">In milliseconds</param>
         /// <param name="distanceFilter">In meters</param>
         /// <param name="stationaryRadius"></param>
-        public GeolocatorWrapper(UInt32 desiredAccuracy, UInt32 reportInterval, double distanceFilter, double stationaryRadius)
+        public GeolocatorWrapper(UInt32 desiredAccuracy, UInt32 reportInterval, double distanceFilter, double stationaryRadius, bool useFixedTimeInterval)
         {
             _desiredAccuracy = desiredAccuracy;
             _reportInterval = reportInterval;
@@ -83,6 +85,7 @@ namespace Cordova.Extension.Commands
             _stationaryRadius = stationaryRadius;
             _positionPath = new PositionPath();
             _stationaryManager = new StationaryManager(stationaryRadius);
+            _useFixedTimeInterval = useFixedTimeInterval;
         }
 
         public void Start()
@@ -136,9 +139,12 @@ namespace Cordova.Extension.Commands
                 SkipPosition(updateScaledDistanceFilterResult.StartStationary, updateScaledDistanceFilterResult.StartStationary, updateScaledDistanceFilterResult.Distance);
                 return;
             }
-
-            var newReportInterval = CalculateNewReportInterval(currentAvgSpeed);
-            if (updateScaledDistanceFilterResult.ScaledDistanceFilterChanged) UpdateReportInterval(newReportInterval);
+            
+            if (updateScaledDistanceFilterResult.ScaledDistanceFilterChanged && !_useFixedTimeInterval)
+            {
+                var newReportInterval = CalculateNewReportInterval(currentAvgSpeed);
+                UpdateReportInterval(newReportInterval);
+            }
 
             PositionChanged(this, new GeolocatorWrapperPositionChangedEventArgs
             {
@@ -195,8 +201,11 @@ namespace Cordova.Extension.Commands
                         _stationaryManager.GetDistanceToStationary(newPosition))
             });
 
-            // stay in stationary
-            UpdateReportInterval((uint)newStationaryReportInterval);
+            if (!_useFixedTimeInterval)
+            {
+                // stay in stationary
+                UpdateReportInterval((uint)newStationaryReportInterval);
+            }
 
             return StationaryUpdateResult.InStationary;
         }

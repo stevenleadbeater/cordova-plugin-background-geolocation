@@ -53,8 +53,9 @@ var backgroundGeoLocation = {
             //Android FusedLocation config
             locationService       = config.locationService || this.service.ANDROID_DISTANCE_FILTER,
             //@Deprecated use locationTimeout instead
-            interval              = (config.interval >= 0) ? config.interval : locationTimeout * 1000; // milliseconds
-            fastestInterval       = (config.fastestInterval >= 0) ? config.fastestInterval  : 120000; // milliseconds
+            interval              = (config.interval >= 0) ? config.interval : locationTimeout * 1000, // milliseconds
+            fastestInterval       = (config.fastestInterval >= 0) ? config.fastestInterval  : 120000, // milliseconds
+            useFixedTimeInterval  = config.useFixedTimeInterval || false;
 
 
         exec(success || function() {},
@@ -75,6 +76,7 @@ var backgroundGeoLocation = {
                 locationService,
                 interval,
                 fastestInterval,
+                useFixedTimeInterval
             ]
         );
     },

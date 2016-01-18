@@ -57,6 +57,7 @@ namespace Cordova.Extension.Commands
             double stationaryRadius, distanceFilter;
             UInt32 locationTimeout, desiredAccuracy;
             bool debug;
+            bool useFixedTimeInterval;
 
             if (!double.TryParse(options[0], out stationaryRadius))
             {
@@ -83,6 +84,11 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for debug:{0}", options[4])));
                 parsingSucceeded = false;
             }
+            if (!bool.TryParse(options[14], out useFixedTimeInterval))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval:{0}", options[14])));
+                parsingSucceeded = false;
+            }
 
             return new BackgroundGeoLocationOptions
             {
@@ -91,7 +97,8 @@ namespace Cordova.Extension.Commands
                 LocationTimeoutInSeconds = locationTimeout,
                 DesiredAccuracyInMeters = desiredAccuracy,
                 Debug = debug,
-                ParsingSucceeded = parsingSucceeded
+                ParsingSucceeded = parsingSucceeded,
+                UseFixedTimeInterval = useFixedTimeInterval
             };
         }
 
@@ -119,7 +126,7 @@ namespace Cordova.Extension.Commands
                     return;
                 }
 
-                Geolocator = new GeolocatorWrapper(BackgroundGeoLocationOptions.DesiredAccuracyInMeters, BackgroundGeoLocationOptions.LocationTimeoutInSeconds * 1000, BackgroundGeoLocationOptions.DistanceFilterInMeters, BackgroundGeoLocationOptions.StationaryRadius);
+                Geolocator = new GeolocatorWrapper(BackgroundGeoLocationOptions.DesiredAccuracyInMeters, BackgroundGeoLocationOptions.LocationTimeoutInSeconds * 1000, BackgroundGeoLocationOptions.DistanceFilterInMeters, BackgroundGeoLocationOptions.StationaryRadius, BackgroundGeoLocationOptions.UseFixedTimeInterval);
                 Geolocator.PositionChanged += OnGeolocatorOnPositionChanged;
                 Geolocator.Start();
 

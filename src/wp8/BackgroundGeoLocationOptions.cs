@@ -11,6 +11,7 @@ namespace Cordova.Extension.Commands
         public bool Debug;
         public bool StopOnTerminate;
         public bool ParsingSucceeded { get; set; }
+        public bool UseFixedTimeInterval { get; set; }
 
     }
 }
