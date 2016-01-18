@@ -84,9 +84,9 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for debug:{0}", options[4])));
                 parsingSucceeded = false;
             }
-            if (!bool.TryParse(options[14], out useFixedTimeInterval))
+            if (!bool.TryParse(options[15], out useFixedTimeInterval))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval:{0}", options[14])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval:{0}", options[15])));
                 parsingSucceeded = false;
             }
 
