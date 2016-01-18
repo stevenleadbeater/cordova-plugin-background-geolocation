@@ -22,6 +22,7 @@
     BOOL enabled;
     BOOL isUpdatingLocation;
     BOOL stopOnTerminate;
+	BOOL useFixedTimeInterval;
 
     UIBackgroundTaskIdentifier bgTask;
     NSDate *lastBgTaskAt;
@@ -77,6 +78,7 @@
     stationaryRegion = nil;
     isDebugging = NO;
     stopOnTerminate = NO;
+	useFixedTimeInterval = NO;
 
     maxStationaryLocationAttempts   = 4;
     maxSpeedAcquistionAttempts      = 3;
@@ -97,17 +99,18 @@
 - (void) configure:(CDVInvokedUrlCommand*)command
 {
     // Params.
-    //    0                    1               2                 3           4          5                  6                7               8
-    //[stationaryRadius, distanceFilter, locationTimeout, desiredAccuracy, debug, notificationTitle, notificationText, activityType, stopOnTerminate]
+    //    0                    1               2                 3           4          5                  6                7               8                  15
+    //[stationaryRadius, distanceFilter, locationTimeout, desiredAccuracy, debug, notificationTitle, notificationText, activityType, stopOnTerminate, useFixedTimeInterval]
 
     // UNUSED ANDROID VARS
-    stationaryRadius    = [[command.arguments objectAtIndex: 0] intValue];
-    distanceFilter      = [[command.arguments objectAtIndex: 1] intValue];
-    locationTimeout     = [[command.arguments objectAtIndex: 2] intValue];
-    desiredAccuracy     = [self decodeDesiredAccuracy:[[command.arguments objectAtIndex: 3] intValue]];
-    isDebugging         = [[command.arguments objectAtIndex: 4] boolValue];
-    activityType        = [self decodeActivityType:[command.arguments objectAtIndex:7]];
-    stopOnTerminate     = [[command.arguments objectAtIndex: 8] boolValue];
+    stationaryRadius     = [[command.arguments objectAtIndex: 0] intValue];
+    distanceFilter       = [[command.arguments objectAtIndex: 1] intValue];
+    locationTimeout      = [[command.arguments objectAtIndex: 2] intValue];
+    desiredAccuracy      = [self decodeDesiredAccuracy:[[command.arguments objectAtIndex: 3] intValue]];
+    isDebugging          = [[command.arguments objectAtIndex: 4] boolValue];
+    activityType         = [self decodeActivityType:[command.arguments objectAtIndex:7]];
+    stopOnTerminate      = [[command.arguments objectAtIndex: 8] boolValue];
+	useFixedTimeInterval = [[command.arguments objectAtIndex: 15] boolValue];
 
     self.syncCallbackId = command.callbackId;
 
@@ -124,6 +127,7 @@
     NSLog(@"  - activityType: %@", [command.arguments objectAtIndex:7]);
     NSLog(@"  - debug: %d", isDebugging);
     NSLog(@"  - stopOnTerminate: %d", stopOnTerminate);
+	NSLog(@"  - useFixedTimeInterval: %d", useFixedTimeInterval);
 
     // ios 8 requires permissions to send local-notifications
     if (isDebugging) {
@@ -512,12 +516,18 @@
 -(float) calculateDistanceFilter:(float)speed
 {
     float newDistanceFilter = distanceFilter;
-    if (speed < 100) {
-        // (rounded-speed-to-nearest-5) / 2)^2
-        // eg 5.2 becomes (5/2)^2
-        newDistanceFilter = pow((5.0 * floorf(fabsf(speed) / 5.0 + 0.5f)), 2) + distanceFilter;
-    }
-    return (newDistanceFilter < 1000) ? newDistanceFilter : 1000;
+	if(useFixedTimeInterval){
+		
+		return locationTimeout * speed;
+	} else {
+	
+		if (speed < 100) {
+			// (rounded-speed-to-nearest-5) / 2)^2
+			// eg 5.2 becomes (5/2)^2
+			newDistanceFilter = pow((5.0 * floorf(fabsf(speed) / 5.0 + 0.5f)), 2) + distanceFilter;
+		}
+		return (newDistanceFilter < 1000) ? newDistanceFilter : 1000;
+	}
 }
 
 -(void) queue:(CLLocation*)location type:(id)type
