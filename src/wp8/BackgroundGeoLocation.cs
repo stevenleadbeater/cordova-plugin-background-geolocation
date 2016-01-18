@@ -225,6 +225,7 @@ namespace Cordova.Extension.Commands
 
             double stationaryRadius, distanceFilter;
             UInt32 locationTimeout, desiredAccuracy;
+            bool useFixedTimeInterval;
 
             if (!double.TryParse(options[0], out stationaryRadius))
             {
@@ -246,14 +247,20 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for desiredAccuracy:{0}", options[5])));
                 parsingSucceeded = false;
             }
+            if (!bool.TryParse(options[15], out useFixedTimeInterval))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval:{0}", options[15])));
+                parsingSucceeded = false;
+            }
             if (!parsingSucceeded) return;
 
             BackgroundGeoLocationOptions.StationaryRadius = stationaryRadius;
             BackgroundGeoLocationOptions.DistanceFilterInMeters = distanceFilter;
             BackgroundGeoLocationOptions.LocationTimeoutInSeconds = locationTimeout * 1000;
             BackgroundGeoLocationOptions.DesiredAccuracyInMeters = desiredAccuracy;
+            BackgroundGeoLocationOptions.UseFixedTimeInterval = useFixedTimeInterval;
 
-            Geolocator = new GeolocatorWrapper(desiredAccuracy, locationTimeout * 1000, distanceFilter, stationaryRadius);
+            Geolocator = new GeolocatorWrapper(desiredAccuracy, locationTimeout * 1000, distanceFilter, stationaryRadius, useFixedTimeInterval);
             Geolocator.PositionChanged += OnGeolocatorOnPositionChanged;
             Geolocator.Start();
 
