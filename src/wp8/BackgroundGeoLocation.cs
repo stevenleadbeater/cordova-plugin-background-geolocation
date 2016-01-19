@@ -4,7 +4,7 @@ using WPCordovaClassLib.Cordova;
 using WPCordovaClassLib.Cordova.Commands;
 using WPCordovaClassLib.Cordova.JSON;
 using System.Diagnostics;
-using System.Speech.Synthesis;
+using Windows.Phone.Speech.Synthesis;
 
 namespace Cordova.Extension.Commands
 {
