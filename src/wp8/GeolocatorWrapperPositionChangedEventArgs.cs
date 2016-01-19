@@ -12,9 +12,9 @@ namespace Cordova.Extension.Commands
         public bool SpeachReportReady { get; set; }
         public TimeSpan TotalTime { get; set; }
         public int TotalDistance { get; set; }
-        public string CurrentPace { get; set; }
-        public string AveragePace { get; set; }
-        public string CurrentSpeed { get; set; }
-        public string AverageSpeed { get; set; }
+        public decimal CurrentPace { get; set; }
+        public decimal AveragePace { get; set; }
+        public decimal CurrentSpeed { get; set; }
+        public decimal AverageSpeed { get; set; }
     }
 }
