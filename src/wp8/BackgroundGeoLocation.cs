@@ -194,8 +194,10 @@ namespace Cordova.Extension.Commands
                 }
 
                 Geolocator = new GeolocatorWrapper(BackgroundGeoLocationOptions.DesiredAccuracyInMeters, BackgroundGeoLocationOptions.LocationTimeoutInSeconds * 1000, 
-                    BackgroundGeoLocationOptions.DistanceFilterInMeters, BackgroundGeoLocationOptions.StationaryRadius, BackgroundGeoLocationOptions.UseFixedTimeInterval, intervalReportSeconds,
-                intervalReportMeters, reportTotalTime, reportTotalDistance, reportAveragePace, reportCurrentPace, reportAverageSpeed, reportCurrentSpeed, reportInMiles);
+                    BackgroundGeoLocationOptions.DistanceFilterInMeters, BackgroundGeoLocationOptions.StationaryRadius, BackgroundGeoLocationOptions.UseFixedTimeInterval, 
+                    BackgroundGeoLocationOptions.IntervalReportSeconds, BackgroundGeoLocationOptions.IntervalReportMeters, BackgroundGeoLocationOptions.ReportTotalTime, 
+                    BackgroundGeoLocationOptions.ReportTotalDistance, BackgroundGeoLocationOptions.ReportAveragePace, BackgroundGeoLocationOptions.ReportCurrentPace, 
+                    BackgroundGeoLocationOptions.ReportAverageSpeed, BackgroundGeoLocationOptions.ReportCurrentSpeed, BackgroundGeoLocationOptions.ReportInMiles);
                 Geolocator.PositionChanged += OnGeolocatorOnPositionChanged;
                 Geolocator.Start();
 
@@ -226,7 +228,7 @@ namespace Cordova.Extension.Commands
 
                 if (_reportInMiles)
                 {
-                    synth.SpeakText(string.Format("Time {0}, Distance {1}, Current Pace {2}, Average Pace {3}", eventArgs.TotalTime.ToString("mm:ss"), 
+                    synth.SpeakTextAsync(string.Format("Time {0}, Distance {1}, Current Pace {2}, Average Pace {3}", eventArgs.TotalTime.ToString("mm:ss"), 
                         eventArgs.TotalDistance, eventArgs.CurrentPace, eventArgs.AveragePace));
                 }
             }
