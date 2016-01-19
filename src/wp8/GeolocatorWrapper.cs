@@ -61,8 +61,8 @@ namespace Cordova.Extension.Commands
 
         private bool _useFixedTimeInterval;
         private int _reportedPositionsCount;
-        private int _intervalReportSeconds;
-        private int _intervalReportMeters;
+        private UInt32 _intervalReportSeconds;
+        private UInt32 _intervalReportMeters;
         private bool _reportTotalTime;
         private bool _reportTotalDistance;
         private bool _reportAveragePace;
@@ -88,8 +88,8 @@ namespace Cordova.Extension.Commands
         /// <param name="distanceFilter">In meters</param>
         /// <param name="stationaryRadius"></param>
         public GeolocatorWrapper(UInt32 desiredAccuracy, UInt32 reportInterval, double distanceFilter, 
-            double stationaryRadius, bool useFixedTimeInterval, int intervalReportSeconds,
-            int intervalReportMeters, bool reportTotalTime, bool reportTotalDistance, bool reportAveragePace,
+            double stationaryRadius, bool useFixedTimeInterval, UInt32 intervalReportSeconds,
+            UInt32 intervalReportMeters, bool reportTotalTime, bool reportTotalDistance, bool reportAveragePace,
             bool reportCurrentPace, bool reportAverageSpeed, bool reportCurrentSpeed, bool reportInMiles)
         {
             _desiredAccuracy = desiredAccuracy;

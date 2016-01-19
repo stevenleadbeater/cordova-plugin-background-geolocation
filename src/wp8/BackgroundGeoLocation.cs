@@ -60,8 +60,8 @@ namespace Cordova.Extension.Commands
             UInt32 locationTimeout, desiredAccuracy;
             bool debug;
             bool useFixedTimeInterval;
-            int intervalReportSeconds;
-            int intervalReportMeters;
+            UInt32 intervalReportSeconds;
+            UInt32 intervalReportMeters;
             bool reportTotalTime;
             bool reportTotalDistance;
             bool reportAveragePace;
@@ -100,12 +100,12 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval:{0}", options[15])));
                 parsingSucceeded = false;
             }
-            if (!int.TryParse(options[16], out intervalReportSeconds))
+            if (!UInt32.TryParse(options[16], out intervalReportSeconds))
             {
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportSeconds:{0}", options[16])));
                 parsingSucceeded = false;
             }
-            if (!int.TryParse(options[17], out intervalReportMeters))
+            if (!UInt32.TryParse(options[17], out intervalReportMeters))
             {
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportMeters:{0}", options[17])));
                 parsingSucceeded = false;
@@ -307,8 +307,8 @@ namespace Cordova.Extension.Commands
             double stationaryRadius, distanceFilter;
             UInt32 locationTimeout, desiredAccuracy;
             bool useFixedTimeInterval;
-            int intervalReportSeconds;
-            int intervalReportMeters;
+            UInt32 intervalReportSeconds;
+            UInt32 intervalReportMeters;
             bool reportTotalTime;
             bool reportTotalDistance;
             bool reportAveragePace;
@@ -342,12 +342,12 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval:{0}", options[15])));
                 parsingSucceeded = false;
             }
-            if (!int.TryParse(options[16], out intervalReportSeconds))
+            if (!UInt32.TryParse(options[16], out intervalReportSeconds))
             {
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportSeconds:{0}", options[16])));
                 parsingSucceeded = false;
             }
-            if (!int.TryParse(options[17], out intervalReportMeters))
+            if (!UInt32.TryParse(options[17], out intervalReportMeters))
             {
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportMeters:{0}", options[17])));
                 parsingSucceeded = false;

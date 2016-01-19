@@ -12,8 +12,8 @@ namespace Cordova.Extension.Commands
         public bool StopOnTerminate;
         public bool ParsingSucceeded { get; set; }
         public bool UseFixedTimeInterval { get; set; }
-        public int IntervalReportSeconds { get; set; }
-        public int IntervalReportMeters { get; set; }
+        public UInt32 IntervalReportSeconds { get; set; }
+        public UInt32 IntervalReportMeters { get; set; }
         public bool ReportInMiles { get; set; }
         public bool ReportTotalTime { get; set; }
         public bool ReportTotalDistance { get; set; }
