@@ -55,7 +55,16 @@ var backgroundGeoLocation = {
             interval              = (config.interval >= 0) ? config.interval : locationTimeout * 1000, // milliseconds
             fastestInterval       = (config.fastestInterval >= 0) ? config.fastestInterval : 120000, // milliseconds
             activitiesInterval    = config.activitiesInterval || 1000,
-            useFixedTimeInterval  = config.useFixedTimeInterval || false;
+            useFixedTimeInterval  = config.useFixedTimeInterval || false,
+            intervalReportSeconds = config.intervalReportSeconds || 0,
+            intervalReportMeters  = config.intervalReportMeters || 0,
+            reportTotalTime       = config.reportTotalTime || false,
+            reportTotalDistance   = config.reportTotalDistance || false,
+            reportAveragePace     = config.reportAveragePace || false,
+            reportCurrentPace     = config.reportCurrentPace || false,
+            reportAverageSpeed    = config.reportAverageSpeed || false,
+            reportCurrentSpeed    = config.reportCurrentSpeed || false,
+            reportInMiles         = config.reportInMiles || false,
 
         exec(success || function() {},
             failure || function() {},
