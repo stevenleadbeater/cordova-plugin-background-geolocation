@@ -61,6 +61,7 @@ namespace Cordova.Extension.Commands
 
         private bool _useFixedTimeInterval;
         private int _reportedPositionsCount;
+        private int _reportedIntervalsPositionsCount;
         private UInt32 _intervalReportSeconds;
         private UInt32 _intervalReportMeters;
         private bool _reportTotalTime;
@@ -169,6 +170,7 @@ namespace Cordova.Extension.Commands
             }
 
             _reportedPositionsCount++;
+            _reportedIntervalsPositionsCount++;
 
             var geolocatorWrapperPositionChangedEventArgs = new GeolocatorWrapperPositionChangedEventArgs
             {
@@ -178,8 +180,9 @@ namespace Cordova.Extension.Commands
                 PositionUpdateDebugData = PostionUpdateDebugData.ForNewPosition(positionChangesEventArgs, currentAvgSpeed, updateScaledDistanceFilterResult, Geolocator.ReportInterval, stationaryUpdateResult == StationaryUpdateResult.ExitedFromStationary)
             };
 
-            if (_intervalReportSeconds > 0 && (_reportInterval * _reportedPositionsCount) % _intervalReportSeconds == 0)
+            if (_intervalReportSeconds > 0 && (_reportInterval * _reportedIntervalsPositionsCount) >= _intervalReportSeconds)
             {
+                _reportedIntervalsPositionsCount = 0;
                 geolocatorWrapperPositionChangedEventArgs.SpeachReportReady = true;
                 //Get Average speed
                 geolocatorWrapperPositionChangedEventArgs.AverageSpeed = 
