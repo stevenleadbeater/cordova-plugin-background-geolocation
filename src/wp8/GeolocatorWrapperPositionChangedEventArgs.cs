@@ -1,3 +1,4 @@
+using System;
 using Windows.Devices.Geolocation;
 
 namespace Cordova.Extension.Commands
