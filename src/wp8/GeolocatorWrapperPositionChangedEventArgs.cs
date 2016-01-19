@@ -11,10 +11,10 @@ namespace Cordova.Extension.Commands
         public PostionUpdateDebugData PositionUpdateDebugData { get; set; }
         public bool SpeachReportReady { get; set; }
         public TimeSpan TotalTime { get; set; }
-        public int TotalDistance { get; set; }
-        public decimal CurrentPace { get; set; }
-        public decimal AveragePace { get; set; }
-        public decimal CurrentSpeed { get; set; }
-        public decimal AverageSpeed { get; set; }
+        public double? TotalDistance { get; set; }
+        public double? CurrentPace { get; set; }
+        public double? AveragePace { get; set; }
+        public double? CurrentSpeed { get; set; }
+        public double? AverageSpeed { get; set; }
     }
 }
