@@ -106,6 +106,7 @@
 
 		<config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
 			<Capability Name="ID_CAP_LOCATION" />
+			<Capability Name="ID_CAP_SPEECH_RECOGNITION" />
 		</config-file>
 		<source-file src="src/wp8/BackgroundGeoLocation.cs" />
 		<source-file src="src/wp8/BackgroundGeoLocationOptions.cs" />

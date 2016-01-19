@@ -10,7 +10,9 @@ namespace Cordova.Extension.Commands
         private readonly List<Position> _positions = new List<Position>();
 
         private const int MinimumAccuracyToCalculateSpeed = 50;
-        private static readonly TimeSpan MaximumTimeframeForSpeedCalculation = TimeSpan.FromMinutes(5);
+
+        //4 Hours maximum calculation frames. For Marathon runners!
+        private static readonly TimeSpan MaximumTimeframeForSpeedCalculation = TimeSpan.FromMinutes(240);
 
         public void AddPosition(GeoCoordinate geoCoordinate, DateTime dateTime, double accuracy)
         {
@@ -62,12 +64,33 @@ namespace Cordova.Extension.Commands
                 .Where(x => x.DateTime > sinceMaximum)
                 .Where(x => x.DinstanceToPrevious.HasValue)
                 .Where(x => x.Speed.HasValue)
-                .Take(10)
                 .ToList();
 
             if (!positionsToMeasure.Any()) return null;
 
             return positionsToMeasure.Average(x => x.Speed.Value);
+        }
+
+        /// <summary>
+        /// Gets the total distance in a given timeframe, only of positions with a distance and a (valid) speed
+        /// </summary>
+        /// <param name="timeFrame"></param>
+        /// <returns></returns>
+        public double? GetTotalDistance(TimeSpan timeFrame)
+        {
+            var since = DateTime.Now.Subtract(timeFrame);
+            var sinceMaximum = DateTime.Now.Subtract(MaximumTimeframeForSpeedCalculation);
+
+            var positionsToMeasure = _positions
+                .Where(x => x.DateTime > since)
+                .Where(x => x.DateTime > sinceMaximum)
+                .Where(x => x.DinstanceToPrevious.HasValue)
+                .Where(x => x.Speed.HasValue)
+                .ToList();
+
+            if (!positionsToMeasure.Any()) return null;
+
+            return positionsToMeasure.Sum(x => x.DinstanceToPrevious.Value);
         }
     }
 }

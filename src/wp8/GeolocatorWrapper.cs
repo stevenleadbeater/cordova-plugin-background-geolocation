@@ -60,6 +60,16 @@ namespace Cordova.Extension.Commands
         private bool _skipNextPosition;
 
         private bool _useFixedTimeInterval;
+        private int _reportedPositionsCount;
+        private int _intervalReportSeconds;
+        private int _intervalReportMeters;
+        private bool _reportTotalTime;
+        private bool _reportTotalDistance;
+        private bool _reportAveragePace;
+        private bool _reportCurrentPace;
+        private bool _reportInMiles;
+        private bool _reportAverageSpeed;
+        private bool _reportCurrentSpeed;
 
         private readonly PositionPath _positionPath;
         private readonly StationaryManager _stationaryManager;
@@ -77,7 +87,10 @@ namespace Cordova.Extension.Commands
         /// <param name="reportInterval">In milliseconds</param>
         /// <param name="distanceFilter">In meters</param>
         /// <param name="stationaryRadius"></param>
-        public GeolocatorWrapper(UInt32 desiredAccuracy, UInt32 reportInterval, double distanceFilter, double stationaryRadius, bool useFixedTimeInterval)
+        public GeolocatorWrapper(UInt32 desiredAccuracy, UInt32 reportInterval, double distanceFilter, 
+            double stationaryRadius, bool useFixedTimeInterval, int intervalReportSeconds,
+            int intervalReportMeters, bool reportTotalTime, bool reportTotalDistance, bool reportAveragePace,
+            bool reportCurrentPace, bool reportAverageSpeed, bool reportCurrentSpeed, bool reportInMiles)
         {
             _desiredAccuracy = desiredAccuracy;
             _reportInterval = reportInterval;
@@ -86,6 +99,15 @@ namespace Cordova.Extension.Commands
             _positionPath = new PositionPath();
             _stationaryManager = new StationaryManager(stationaryRadius);
             _useFixedTimeInterval = useFixedTimeInterval;
+            _intervalReportSeconds = intervalReportSeconds;
+            _intervalReportMeters = intervalReportMeters;
+            _reportTotalTime = reportTotalTime;
+            _reportTotalDistance = reportTotalDistance;
+            _reportAveragePace = reportAveragePace;
+            _reportCurrentPace = reportCurrentPace;
+            _reportAverageSpeed = reportAverageSpeed;
+            _reportCurrentSpeed = reportCurrentSpeed;
+            _reportInMiles = reportInMiles;
         }
 
         public void Start()
@@ -146,13 +168,55 @@ namespace Cordova.Extension.Commands
                 UpdateReportInterval(newReportInterval);
             }
 
-            PositionChanged(this, new GeolocatorWrapperPositionChangedEventArgs
+            _reportedPositionsCount++;
+
+            var geolocatorWrapperPositionChangedEventArgs = new GeolocatorWrapperPositionChangedEventArgs
             {
                 GeolocatorLocationStatus = Geolocator.LocationStatus,
                 Position = positionChangesEventArgs.Position,
                 EnteredStationary = false,
                 PositionUpdateDebugData = PostionUpdateDebugData.ForNewPosition(positionChangesEventArgs, currentAvgSpeed, updateScaledDistanceFilterResult, Geolocator.ReportInterval, stationaryUpdateResult == StationaryUpdateResult.ExitedFromStationary)
-            });
+            };
+
+            if (_intervalReportSeconds > 0 && (_reportInterval * _reportedPositionsCount) % _intervalReportSeconds == 0)
+            {
+                geolocatorWrapperPositionChangedEventArgs.SpeachReportReady = true;
+                //Get Average speed
+                geolocatorWrapperPositionChangedEventArgs.AverageSpeed = 
+                    _positionPath.GetCurrentSpeed(TimeSpan.FromMilliseconds(_reportInterval * _reportedPositionsCount));
+
+                //Get Current speed
+                geolocatorWrapperPositionChangedEventArgs.CurrentSpeed = 
+                    _positionPath.GetCurrentSpeed(TimeSpan.FromSeconds(_intervalReportSeconds));
+
+                if (_reportInMiles)
+                {
+                    //Convert Average speed to MPH
+                    geolocatorWrapperPositionChangedEventArgs.AverageSpeed = 
+                        geolocatorWrapperPositionChangedEventArgs.AverageSpeed * 2.23694;
+
+                    //Convert Current speed to MPH
+                    geolocatorWrapperPositionChangedEventArgs.CurrentSpeed =
+                        geolocatorWrapperPositionChangedEventArgs.CurrentSpeed * 2.23694;
+                }
+
+                //Get Average Pace
+                geolocatorWrapperPositionChangedEventArgs.AveragePace =
+                    60 / geolocatorWrapperPositionChangedEventArgs.AverageSpeed;
+
+                //Get Current Pace
+                geolocatorWrapperPositionChangedEventArgs.CurrentPace =
+                    60 / geolocatorWrapperPositionChangedEventArgs.CurrentSpeed;
+
+                //Get Total Time
+                geolocatorWrapperPositionChangedEventArgs.TotalTime = 
+                    TimeSpan.FromMilliseconds(_reportInterval * _reportedPositionsCount);
+
+                //Get Total Distance
+                geolocatorWrapperPositionChangedEventArgs.TotalTime =
+                    _positionPath.GetTotalDistance(TimeSpan.FromMilliseconds(_reportInterval * _reportedPositionsCount));
+            }
+            PositionChanged(this, geolocatorWrapperPositionChangedEventArgs);
         }
 
         private void SkipPosition(bool becauseOfEnteringStationary, bool startStationary, double? distance)

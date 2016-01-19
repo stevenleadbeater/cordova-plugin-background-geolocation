@@ -26,6 +26,7 @@ namespace Cordova.Extension.Commands
         /// </summary>
         private bool IsConfigured { get; set; }
         private bool IsConfiguring { get; set; }
+        private bool _reportInMiles;
 
         private readonly IDebugNotifier _debugNotifier;
 
@@ -58,6 +59,15 @@ namespace Cordova.Extension.Commands
             UInt32 locationTimeout, desiredAccuracy;
             bool debug;
             bool useFixedTimeInterval;
+            int intervalReportSeconds;
+            int intervalReportMeters;
+            bool reportTotalTime;
+            bool reportTotalDistance;
+            bool reportAveragePace;
+            bool reportCurrentPace;
+            bool reportAverageSpeed;
+            bool reportCurrentSpeed;
+            bool reportInMiles;
 
             if (!double.TryParse(options[0], out stationaryRadius))
             {
@@ -89,6 +99,53 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval:{0}", options[15])));
                 parsingSucceeded = false;
             }
+            if (!int.TryParse(options[16], out intervalReportSeconds))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportSeconds:{0}", options[16])));
+                parsingSucceeded = false;
+            }
+            if (!int.TryParse(options[17], out intervalReportMeters))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportMeters:{0}", options[17])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[18], out reportTotalTime))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalTime:{0}", options[18])));
+                parsingSucceeded = false;
+            }
+            if (!int.TryParse(options[19], out reportTotalDistance))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalDistance:{0}", options[19])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[20], out reportAveragePace))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAveragePace:{0}", options[20])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[21], out reportCurrentPace))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentPace:{0}", options[21])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[22], out reportAverageSpeed))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAverageSpeed:{0}", options[22])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[23], out reportCurrentSpeed))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentSpeed:{0}", options[23])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[24], out reportInMiles))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportInMiles:{0}", options[24])));
+                parsingSucceeded = false;
+            }
+
+            _reportInMiles = reportInMiles;
 
             return new BackgroundGeoLocationOptions
             {
@@ -98,7 +155,16 @@ namespace Cordova.Extension.Commands
                 DesiredAccuracyInMeters = desiredAccuracy,
                 Debug = debug,
                 ParsingSucceeded = parsingSucceeded,
-                UseFixedTimeInterval = useFixedTimeInterval
+                UseFixedTimeInterval = useFixedTimeInterval,
+                IntervalReportSeconds = intervalReportSeconds,
+                IntervalReportMeters = intervalReportMeters,
+                ReportInMiles = reportInMiles,
+                ReportTotalTime = reportTotalTime,
+                ReportTotalDistance = reportTotalDistance,
+                ReportAveragePace = reportAveragePace,
+                ReportCurrentPace = reportCurrentPace,
+                ReportAverageSpeed = reportAverageSpeed,
+                ReportCurrentSpeed = reportCurrentSpeed
             };
         }
 
@@ -151,6 +217,16 @@ namespace Cordova.Extension.Commands
             else
                 DispatchMessage(PluginResult.Status.ERROR, "Null position received", true, ConfigureCallbackToken);
 
+            if (eventArgs.SpeachReportReady)
+            {
+                SpeechSynthesizer synth = new SpeechSynthesizer();
+
+                if (_reportInMiles)
+                {
+                    synth.SpeakText(string.Format("Time {0}, Distance {1}, Current Pace {2}, Average Pace {3}", eventArgs.TotalTime.ToString("mm:ss"), 
+                        eventArgs.TotalDistance, eventArgs.CurrentPace, eventArgs.AveragePace));
+                }
+            }
         }
 
         private void HandlePositionUpdateDebugData(PostionUpdateDebugData postionUpdateDebugData)
@@ -226,6 +302,15 @@ namespace Cordova.Extension.Commands
             double stationaryRadius, distanceFilter;
             UInt32 locationTimeout, desiredAccuracy;
             bool useFixedTimeInterval;
+            int intervalReportSeconds;
+            int intervalReportMeters;
+            bool reportTotalTime;
+            bool reportTotalDistance;
+            bool reportAveragePace;
+            bool reportCurrentPace;
+            bool reportAverageSpeed;
+            bool reportCurrentSpeed;
+            bool reportInMiles;
 
             if (!double.TryParse(options[0], out stationaryRadius))
             {
@@ -252,6 +337,51 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval:{0}", options[15])));
                 parsingSucceeded = false;
             }
+            if (!int.TryParse(options[16], out intervalReportSeconds))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportSeconds:{0}", options[16])));
+                parsingSucceeded = false;
+            }
+            if (!int.TryParse(options[17], out intervalReportMeters))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportMeters:{0}", options[17])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[18], out reportTotalTime))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalTime:{0}", options[18])));
+                parsingSucceeded = false;
+            }
+            if (!int.TryParse(options[19], out reportTotalDistance))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalDistance:{0}", options[19])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[20], out reportAveragePace))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAveragePace:{0}", options[20])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[21], out reportCurrentPace))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentPace:{0}", options[21])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[22], out reportAverageSpeed))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAverageSpeed:{0}", options[22])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[23], out reportCurrentSpeed))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentSpeed:{0}", options[23])));
+                parsingSucceeded = false;
+            }
+            if (!bool.TryParse(options[24], out reportInMiles))
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportInMiles:{0}", options[24])));
+                parsingSucceeded = false;
+            }
             if (!parsingSucceeded) return;
 
             BackgroundGeoLocationOptions.StationaryRadius = stationaryRadius;
@@ -259,8 +389,18 @@ namespace Cordova.Extension.Commands
             BackgroundGeoLocationOptions.LocationTimeoutInSeconds = locationTimeout * 1000;
             BackgroundGeoLocationOptions.DesiredAccuracyInMeters = desiredAccuracy;
             BackgroundGeoLocationOptions.UseFixedTimeInterval = useFixedTimeInterval;
+            BackgroundGeoLocationOptions.IntervalReportSeconds = intervalReportSeconds;
+            BackgroundGeoLocationOptions.IntervalReportMeters = intervalReportMeters;
+            BackgroundGeoLocationOptions.ReportInMiles = reportInMiles;
+            BackgroundGeoLocationOptions.ReportTotalTime = reportTotalTime;
+            BackgroundGeoLocationOptions.ReportTotalDistance = reportTotalDistance;
+            BackgroundGeoLocationOptions.ReportAveragePace = reportAveragePace;
+            BackgroundGeoLocationOptions.ReportCurrentPace = reportCurrentPace;
+            BackgroundGeoLocationOptions.ReportAverageSpeed = reportAverageSpeed;
+            BackgroundGeoLocationOptions.ReportCurrentSpeed = reportCurrentSpeed;
 
-            Geolocator = new GeolocatorWrapper(desiredAccuracy, locationTimeout * 1000, distanceFilter, stationaryRadius, useFixedTimeInterval);
+            Geolocator = new GeolocatorWrapper(desiredAccuracy, locationTimeout * 1000, distanceFilter, stationaryRadius, useFixedTimeInterval, intervalReportSeconds,
+                intervalReportMeters, reportTotalTime, reportTotalDistance, reportAveragePace, reportCurrentPace, reportAverageSpeed, reportCurrentSpeed, reportInMiles);
             Geolocator.PositionChanged += OnGeolocatorOnPositionChanged;
             Geolocator.Start();
 
