@@ -213,7 +213,7 @@ namespace Cordova.Extension.Commands
                     TimeSpan.FromMilliseconds(_reportInterval * _reportedPositionsCount);
 
                 //Get Total Distance
-                geolocatorWrapperPositionChangedEventArgs.TotalTime =
+                geolocatorWrapperPositionChangedEventArgs.TotalDistance =
                     _positionPath.GetTotalDistance(TimeSpan.FromMilliseconds(_reportInterval * _reportedPositionsCount));
             }
             PositionChanged(this, geolocatorWrapperPositionChangedEventArgs);
