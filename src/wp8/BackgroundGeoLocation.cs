@@ -4,6 +4,7 @@ using WPCordovaClassLib.Cordova;
 using WPCordovaClassLib.Cordova.Commands;
 using WPCordovaClassLib.Cordova.JSON;
 using System.Diagnostics;
+using System.Speech.Synthesis;
 
 namespace Cordova.Extension.Commands
 {
@@ -114,7 +115,7 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalTime:{0}", options[18])));
                 parsingSucceeded = false;
             }
-            if (!int.TryParse(options[19], out reportTotalDistance))
+            if (!bool.TryParse(options[19], out reportTotalDistance))
             {
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalDistance:{0}", options[19])));
                 parsingSucceeded = false;
@@ -192,7 +193,9 @@ namespace Cordova.Extension.Commands
                     return;
                 }
 
-                Geolocator = new GeolocatorWrapper(BackgroundGeoLocationOptions.DesiredAccuracyInMeters, BackgroundGeoLocationOptions.LocationTimeoutInSeconds * 1000, BackgroundGeoLocationOptions.DistanceFilterInMeters, BackgroundGeoLocationOptions.StationaryRadius, BackgroundGeoLocationOptions.UseFixedTimeInterval);
+                Geolocator = new GeolocatorWrapper(BackgroundGeoLocationOptions.DesiredAccuracyInMeters, BackgroundGeoLocationOptions.LocationTimeoutInSeconds * 1000, 
+                    BackgroundGeoLocationOptions.DistanceFilterInMeters, BackgroundGeoLocationOptions.StationaryRadius, BackgroundGeoLocationOptions.UseFixedTimeInterval, intervalReportSeconds,
+                intervalReportMeters, reportTotalTime, reportTotalDistance, reportAveragePace, reportCurrentPace, reportAverageSpeed, reportCurrentSpeed, reportInMiles);
                 Geolocator.PositionChanged += OnGeolocatorOnPositionChanged;
                 Geolocator.Start();
 
@@ -352,7 +355,7 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalTime:{0}", options[18])));
                 parsingSucceeded = false;
             }
-            if (!int.TryParse(options[19], out reportTotalDistance))
+            if (!bool.TryParse(options[19], out reportTotalDistance))
             {
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalDistance:{0}", options[19])));
                 parsingSucceeded = false;
