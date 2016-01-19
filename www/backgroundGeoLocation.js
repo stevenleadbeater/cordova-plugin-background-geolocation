@@ -85,7 +85,16 @@ var backgroundGeoLocation = {
                 interval,
                 fastestInterval,
                 activitiesInterval,
-                useFixedTimeInterval
+                useFixedTimeInterval,
+                intervalReportSeconds,
+                intervalReportMeters,
+                reportTotalTime,
+                reportTotalDistance,
+                reportAveragePace,
+                reportCurrentPace,
+                reportAverageSpeed,
+                reportCurrentSpeed,
+                reportInMiles
             ]
         );
     },
