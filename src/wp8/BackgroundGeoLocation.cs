@@ -72,77 +72,77 @@ namespace Cordova.Extension.Commands
 
             if (!double.TryParse(options[0], out stationaryRadius))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for stationaryRadius:{0}", options[0])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for stationaryRadius: {0}", options[0])));
                 parsingSucceeded = false;
             }
             if (!double.TryParse(options[1], out distanceFilter))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for distanceFilter:{0}", options[1])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for distanceFilter: {0}", options[1])));
                 parsingSucceeded = false;
             }
             if (!UInt32.TryParse(options[2], out locationTimeout))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for locationTimeout:{0}", options[2])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for locationTimeout: {0}", options[2])));
                 parsingSucceeded = false;
             }
             if (!UInt32.TryParse(options[3], out desiredAccuracy))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for desiredAccuracy:{0}", options[3])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for desiredAccuracy: {0}", options[3])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[4], out debug))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for debug:{0}", options[4])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for debug: {0}", options[4])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[15], out useFixedTimeInterval))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval:{0}", options[15])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval: {0}", options[15])));
                 parsingSucceeded = false;
             }
             if (!UInt32.TryParse(options[16], out intervalReportSeconds))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportSeconds:{0}", options[16])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportSeconds: {0}", options[16])));
                 parsingSucceeded = false;
             }
             if (!UInt32.TryParse(options[17], out intervalReportMeters))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportMeters:{0}", options[17])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportMeters: {0}", options[17])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[18], out reportTotalTime))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalTime:{0}", options[18])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalTime: {0}", options[18])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[19], out reportTotalDistance))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalDistance:{0}", options[19])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalDistance: {0}", options[19])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[20], out reportAveragePace))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAveragePace:{0}", options[20])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAveragePace: {0}", options[20])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[21], out reportCurrentPace))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentPace:{0}", options[21])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentPace: {0}", options[21])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[22], out reportAverageSpeed))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAverageSpeed:{0}", options[22])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAverageSpeed: {0}", options[22])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[23], out reportCurrentSpeed))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentSpeed:{0}", options[23])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentSpeed: {0}", options[23])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[24], out reportInMiles))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportInMiles:{0}", options[24])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportInMiles: {0}", options[24])));
                 parsingSucceeded = false;
             }
 
@@ -319,72 +319,72 @@ namespace Cordova.Extension.Commands
 
             if (!double.TryParse(options[0], out stationaryRadius))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for stationaryRadius:{0}", options[2])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for stationaryRadius: {0}", options[2])));
                 parsingSucceeded = false;
             }
             if (!double.TryParse(options[1], out distanceFilter))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for distanceFilter:{0}", options[3])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for distanceFilter: {0}", options[3])));
                 parsingSucceeded = false;
             }
             if (!UInt32.TryParse(options[2], out locationTimeout))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for locationTimeout:{0}", options[4])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for locationTimeout: {0}", options[4])));
                 parsingSucceeded = false;
             }
             if (!UInt32.TryParse(options[3], out desiredAccuracy))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for desiredAccuracy:{0}", options[5])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for desiredAccuracy: {0}", options[5])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[15], out useFixedTimeInterval))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval:{0}", options[15])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for useFixedTimeInterval: {0}", options[15])));
                 parsingSucceeded = false;
             }
             if (!UInt32.TryParse(options[16], out intervalReportSeconds))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportSeconds:{0}", options[16])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportSeconds: {0}", options[16])));
                 parsingSucceeded = false;
             }
             if (!UInt32.TryParse(options[17], out intervalReportMeters))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportMeters:{0}", options[17])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for intervalReportMeters: {0}", options[17])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[18], out reportTotalTime))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalTime:{0}", options[18])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalTime: {0}", options[18])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[19], out reportTotalDistance))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalDistance:{0}", options[19])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportTotalDistance: {0}", options[19])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[20], out reportAveragePace))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAveragePace:{0}", options[20])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAveragePace: {0}", options[20])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[21], out reportCurrentPace))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentPace:{0}", options[21])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentPace: {0}", options[21])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[22], out reportAverageSpeed))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAverageSpeed:{0}", options[22])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportAverageSpeed: {0}", options[22])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[23], out reportCurrentSpeed))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentSpeed:{0}", options[23])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportCurrentSpeed: {0}", options[23])));
                 parsingSucceeded = false;
             }
             if (!bool.TryParse(options[24], out reportInMiles))
             {
-                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportInMiles:{0}", options[24])));
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportInMiles: {0}", options[24])));
                 parsingSucceeded = false;
             }
             if (!parsingSucceeded) return;
