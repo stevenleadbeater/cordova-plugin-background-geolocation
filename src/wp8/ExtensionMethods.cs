@@ -49,7 +49,7 @@ namespace Cordova.Extension.Commands
                                  "\"timestamp\": {7}" +
                                  "}}"
                 , eventArgs.SpeachReportReady.ToString()
-                , eventArgs.TotalTime.Ticks()
+                , eventArgs.TotalTime.Ticks
                 , eventArgs.TotalDistance.ToString(numberFormatInfo)
                 , eventArgs.CurrentPace.ToString(numberFormatInfo)
                 , eventArgs.AveragePace.ToString(numberFormatInfo));
