@@ -222,6 +222,8 @@ namespace Cordova.Extension.Commands
             else
                 DispatchMessage(PluginResult.Status.ERROR, "Null position received", true, ConfigureCallbackToken);
 
+            DispatchMessage(PluginResult.Status.OK, eventArgs.ToJson(), true, ConfigureCallbackToken);
+
             if (eventArgs.SpeachReportReady)
             {
                 SpeechSynthesizer synth = new SpeechSynthesizer();
