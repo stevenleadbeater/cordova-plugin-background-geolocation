@@ -50,9 +50,9 @@ namespace Cordova.Extension.Commands
                                  "}}"
                 , eventArgs.SpeachReportReady.ToString()
                 , eventArgs.TotalTime.Ticks
-                , eventArgs.TotalDistance.ToString(numberFormatInfo)
-                , eventArgs.CurrentPace.ToString(numberFormatInfo)
-                , eventArgs.AveragePace.ToString(numberFormatInfo));
+                , eventArgs.TotalDistance.ToString()
+                , eventArgs.CurrentPace.ToString()
+                , eventArgs.AveragePace.ToString());
         }
 
         public static long ToJavaScriptMilliseconds(this DateTime dt)
