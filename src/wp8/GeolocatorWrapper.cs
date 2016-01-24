@@ -204,6 +204,10 @@ namespace Cordova.Extension.Commands
                     //Convert Current speed to MPH
                     geolocatorWrapperPositionChangedEventArgs.CurrentSpeed =
                         geolocatorWrapperPositionChangedEventArgs.CurrentSpeed * 2.23694;
+
+                    //Get Total Distance
+                    geolocatorWrapperPositionChangedEventArgs.TotalDistance =
+                        _positionPath.GetTotalDistance(TimeSpan.FromMilliseconds(_reportInterval * _reportedPositionsCount)) * 0.000621371;
                 }
 
                 //Get Average Pace
@@ -216,11 +220,7 @@ namespace Cordova.Extension.Commands
 
                 //Get Total Time
                 geolocatorWrapperPositionChangedEventArgs.TotalTime = 
-                    TimeSpan.FromMilliseconds(_reportInterval * _reportedPositionsCount);
-
-                //Get Total Distance
-                geolocatorWrapperPositionChangedEventArgs.TotalDistance =
-                    _positionPath.GetTotalDistance(TimeSpan.FromMilliseconds(_reportInterval * _reportedPositionsCount));
+                    TimeSpan.FromMilliseconds(_reportInterval * _reportedPositionsCount);                
             }
             PositionChanged(this, geolocatorWrapperPositionChangedEventArgs);
         }
