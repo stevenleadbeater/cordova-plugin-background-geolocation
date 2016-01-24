@@ -229,9 +229,9 @@ namespace Cordova.Extension.Commands
                     SpeechSynthesizer synth = new SpeechSynthesizer();
                     await synth.SpeakTextAsync(string.Format("Time {0}, Total Distance {1} miles, Current Pace {2} minutes per mile, Average Pace {3} minutes per mile", 
                         eventArgs.TotalTime.GetSpeechFormat(), 
-                        eventArgs.TotalDistance.ToString("0.0"),
-                        eventArgs.CurrentPace.ToString("0.0"),
-                        eventArgs.AveragePace.ToString("0.0")
+                        ((double)eventArgs.TotalDistance).ToString("0.0"),
+                        ((double)eventArgs.CurrentPace).ToString("0.0"),
+                        ((double)eventArgs.AveragePace).ToString("0.0")
                         ));
 
                 }
