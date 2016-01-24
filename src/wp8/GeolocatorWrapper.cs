@@ -157,7 +157,7 @@ namespace Cordova.Extension.Commands
             var currentAvgSpeed = _positionPath.GetCurrentSpeed(TimeSpan.FromMilliseconds(_reportInterval * 5)); // avg speed of last 5 (at max) positions
 
             var updateScaledDistanceFilterResult = UpdateScaledDistanceFilter(currentAvgSpeed, positionChangesEventArgs.Position.Coordinate);
-            if (updateScaledDistanceFilterResult.SkipPositionBecauseOfDistance)
+            if (updateScaledDistanceFilterResult.SkipPositionBecauseOfDistance && !_useFixedTimeInterval)
             {
                 SkipPosition(updateScaledDistanceFilterResult.StartStationary, updateScaledDistanceFilterResult.StartStationary, updateScaledDistanceFilterResult.Distance);
                 return;
@@ -180,7 +180,7 @@ namespace Cordova.Extension.Commands
                 PositionUpdateDebugData = PostionUpdateDebugData.ForNewPosition(positionChangesEventArgs, currentAvgSpeed, updateScaledDistanceFilterResult, Geolocator.ReportInterval, stationaryUpdateResult == StationaryUpdateResult.ExitedFromStationary)
             };
 
-            if (_intervalReportSeconds > 0 && (_reportInterval * _reportedIntervalsPositionsCount) >= _intervalReportSeconds)
+            if (_intervalReportSeconds > 0 && ((_reportInterval / 1000) * _reportedIntervalsPositionsCount) >= _intervalReportSeconds)
             {
                 _reportedIntervalsPositionsCount = 0;
                 geolocatorWrapperPositionChangedEventArgs.SpeachReportReady = true;
