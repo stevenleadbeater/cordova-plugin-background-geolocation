@@ -71,6 +71,9 @@ namespace Cordova.Extension.Commands
         private bool _reportInMiles;
         private bool _reportAverageSpeed;
         private bool _reportCurrentSpeed;
+        private List<Notification> _notifications;
+        private int _notificationIndex = 0;
+        private int _notificationOffsetSeconds = 0;
 
         private readonly PositionPath _positionPath;
         private readonly StationaryManager _stationaryManager;
@@ -91,7 +94,7 @@ namespace Cordova.Extension.Commands
         public GeolocatorWrapper(UInt32 desiredAccuracy, UInt32 reportInterval, double distanceFilter, 
             double stationaryRadius, bool useFixedTimeInterval, UInt32 intervalReportSeconds,
             UInt32 intervalReportMeters, bool reportTotalTime, bool reportTotalDistance, bool reportAveragePace,
-            bool reportCurrentPace, bool reportAverageSpeed, bool reportCurrentSpeed, bool reportInMiles)
+            bool reportCurrentPace, bool reportAverageSpeed, bool reportCurrentSpeed, bool reportInMiles, List<Notification> notifications)
         {
             _desiredAccuracy = desiredAccuracy;
             _reportInterval = reportInterval;
@@ -109,6 +112,7 @@ namespace Cordova.Extension.Commands
             _reportAverageSpeed = reportAverageSpeed;
             _reportCurrentSpeed = reportCurrentSpeed;
             _reportInMiles = reportInMiles;
+            _notifications = notifications;
         }
 
         public void Start()
@@ -183,7 +187,13 @@ namespace Cordova.Extension.Commands
                 PositionUpdateDebugData = PostionUpdateDebugData.ForNewPosition(positionChangesEventArgs, currentAvgSpeed, updateScaledDistanceFilterResult, Geolocator.ReportInterval, stationaryUpdateResult == StationaryUpdateResult.ExitedFromStationary)
             };
 
-            if (_intervalReportSeconds > 0 && ((_reportInterval / 1000) * _reportedIntervalsPositionsCount) >= _intervalReportSeconds)
+            if(_reportedPositionsCount > 0 && (_notifications[_notificationIndex].IntervalSeconds >= _notificationOffsetSeconds))
+            {
+                _notificationOffsetSeconds += _notifications[_notificationIndex].IntervalSeconds;
+                geolocatorWrapperPositionChangedEventArgs.NotiticationText = _notifications[_notificationIndex].Text;
+            }
+
+            if (_intervalReportSeconds > 0 && ((_reportInterval / 1000) * _reportedIntervalsPositionsCount) == _intervalReportSeconds)
             {
                 _reportedIntervalsPositionsCount = 0;
                 geolocatorWrapperPositionChangedEventArgs.SpeachReportReady = true;

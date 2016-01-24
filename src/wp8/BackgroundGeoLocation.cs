@@ -237,14 +237,19 @@ namespace Cordova.Extension.Commands
                 DispatchMessage(PluginResult.Status.OK, string.Format("{0:0.}", BackgroundGeoLocationOptions.StationaryRadius), true, OnStationaryCallbackToken);
             else
                 DispatchMessage(PluginResult.Status.ERROR, "Null position received", true, ConfigureCallbackToken);
-            
+
+            SpeechSynthesizer synth = new SpeechSynthesizer();
+
+            if (eventArgs.NotiticationText != "")
+            {
+                await synth.SpeakTextAsync(eventArgs.NotiticationText);
+            }
+
             if (eventArgs.SpeachReportReady)
             {
                 if (_reportInMiles)
-                {
-                    SpeechSynthesizer synth = new SpeechSynthesizer();
+                {                    
                     await synth.SpeakTextAsync(GetSpeechStringMiles(eventArgs));
-
                 }
             }
         }
@@ -443,6 +448,16 @@ namespace Cordova.Extension.Commands
                 parsingSucceeded = false;
             }
             if (!parsingSucceeded) return;
+
+            _reportInMiles = reportInMiles;
+            _intervalReportSeconds = intervalReportSeconds;
+            _intervalReportMeters = intervalReportMeters;
+            _reportTotalTime = reportTotalTime;
+            _reportTotalDistance = reportTotalDistance;
+            _reportAveragePace = reportAveragePace;
+            _reportCurrentPace = reportCurrentPace;
+            _reportAverageSpeed = reportAverageSpeed;
+            _reportCurrentSpeed = reportCurrentSpeed;
 
             BackgroundGeoLocationOptions.StationaryRadius = stationaryRadius;
             BackgroundGeoLocationOptions.DistanceFilterInMeters = distanceFilter;

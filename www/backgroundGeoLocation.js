@@ -64,7 +64,8 @@ var backgroundGeoLocation = {
             reportCurrentPace     = config.reportCurrentPace || false,
             reportAverageSpeed    = config.reportAverageSpeed || false,
             reportCurrentSpeed    = config.reportCurrentSpeed || false,
-            reportInMiles         = config.reportInMiles || false;
+            reportInMiles         = config.reportInMiles || false,
+            notificationArray     = config.notificationArray || [];
 
         exec(success || function() {},
             failure || function() {},
@@ -94,7 +95,8 @@ var backgroundGeoLocation = {
                 reportCurrentPace,
                 reportAverageSpeed,
                 reportCurrentSpeed,
-                reportInMiles
+                reportInMiles,
+                notificationArray
             ]
         );
     },

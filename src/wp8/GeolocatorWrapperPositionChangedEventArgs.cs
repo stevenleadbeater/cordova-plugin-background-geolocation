@@ -16,5 +16,6 @@ namespace Cordova.Extension.Commands
         public double? AveragePace { get; set; }
         public double? CurrentSpeed { get; set; }
         public double? AverageSpeed { get; set; }
+        public string NotiticationText { get; set; }
     }
 }
