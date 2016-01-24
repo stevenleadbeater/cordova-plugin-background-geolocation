@@ -28,7 +28,15 @@ namespace Cordova.Extension.Commands
         private bool IsConfigured { get; set; }
         private bool IsConfiguring { get; set; }
         private bool _reportInMiles;
-
+        private UInt32 _intervalReportSeconds;
+        private UInt32 _intervalReportMeters;
+        private bool _reportTotalTime;
+        private bool _reportTotalDistance;
+        private bool _reportAveragePace;
+        private bool _reportCurrentPace;
+        private bool _reportAverageSpeed;
+        private bool _reportCurrentSpeed;
+        
         private readonly IDebugNotifier _debugNotifier;
 
         public BackgroundGeoLocation()
@@ -147,6 +155,14 @@ namespace Cordova.Extension.Commands
             }
 
             _reportInMiles = reportInMiles;
+            _intervalReportSeconds = intervalReportSeconds;
+            _intervalReportMeters = intervalReportMeters;
+            _reportTotalTime = reportTotalTime;
+            _reportTotalDistance = reportTotalDistance;
+            _reportAveragePace = reportAveragePace;
+            _reportCurrentPace = reportCurrentPace;
+            _reportAverageSpeed = reportAverageSpeed;
+            _reportCurrentSpeed = reportCurrentSpeed;
 
             return new BackgroundGeoLocationOptions
             {
@@ -227,14 +243,49 @@ namespace Cordova.Extension.Commands
                 if (_reportInMiles)
                 {
                     SpeechSynthesizer synth = new SpeechSynthesizer();
-                    await synth.SpeakTextAsync(string.Format("Time {0}, Total Distance {1} miles, Current Pace {2} minutes per mile, Average Pace {3} minutes per mile", 
-                        eventArgs.TotalTime.GetSpeechFormat(), 
-                        ((double)eventArgs.TotalDistance).ToString("0.0"),
-                        ((double)eventArgs.CurrentPace).ToString("0.0"),
-                        ((double)eventArgs.AveragePace).ToString("0.0")
-                        ));
+                    await synth.SpeakTextAsync(GetSpeechStringMiles(eventArgs));
 
                 }
+            }
+        }
+
+        private string GetSpeechStringMiles(GeolocatorWrapperPositionChangedEventArgs eventArgs)
+        {
+            var returnValue = "";
+
+            if (_reportTotalTime)
+            {
+                returnValue = string.Format("Time {0}", eventArgs.TotalTime.GetSpeechFormat());
+            }
+
+            if (_reportTotalDistance)
+            {
+                returnValue = returnValue == "" ? returnValue : returnValue + ", ";
+                returnValue += string.Format("Total Distance {0} miles", ((double)eventArgs.TotalDistance).ToString("0.0"));
+            }
+
+            if (_reportCurrentPace)
+            {
+                returnValue = returnValue == "" ? returnValue : returnValue + ", ";
+                returnValue += string.Format("Current Pace {0} minutes per mile", ((double)eventArgs.CurrentPace).ToString("0.0"));
+            }
+
+            if (_reportAveragePace)
+            {
+                returnValue = returnValue == "" ? returnValue : returnValue + ", ";
+                returnValue += string.Format("Average Pace {0} minutes per mile", ((double)eventArgs.AveragePace).ToString("0.0"));
+            }
+
+            if (_reportCurrentSpeed)
+            {
+                returnValue = returnValue == "" ? returnValue : returnValue + ", ";
+                returnValue += string.Format("Current Speed {0} miles per hour", ((double)eventArgs.CurrentSpeed).ToString("0.0"));
+            }
+
+            if (_reportAverageSpeed)
+            {
+                returnValue = returnValue == "" ? returnValue : returnValue + ", ";
+                returnValue += string.Format("Average Speed {0} miles per hour", ((double)eventArgs.AverageSpeed).ToString("0.0"));
             }
         }
 
