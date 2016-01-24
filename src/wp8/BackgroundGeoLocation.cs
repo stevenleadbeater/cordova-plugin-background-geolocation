@@ -205,7 +205,7 @@ namespace Cordova.Extension.Commands
             }
         }
 
-        private void OnGeolocatorOnPositionChanged(GeolocatorWrapper sender, GeolocatorWrapperPositionChangedEventArgs eventArgs)
+        private async void OnGeolocatorOnPositionChanged(GeolocatorWrapper sender, GeolocatorWrapperPositionChangedEventArgs eventArgs)
         {
             if (eventArgs.GeolocatorLocationStatus == PositionStatus.Disabled || eventArgs.GeolocatorLocationStatus == PositionStatus.NotAvailable)
             {
@@ -213,7 +213,10 @@ namespace Cordova.Extension.Commands
                 return;
             }
 
-            HandlePositionUpdateDebugData(eventArgs.PositionUpdateDebugData);
+            SpeechSynthesizer synth = new SpeechSynthesizer();
+            await synth.SpeakTextAsync("Time");
+
+            //HandlePositionUpdateDebugData(eventArgs.PositionUpdateDebugData);
 
             if (eventArgs.Position != null)
                 DispatchMessage(PluginResult.Status.OK, eventArgs.Position.Coordinate.ToJson(), true, ConfigureCallbackToken);
@@ -224,9 +227,7 @@ namespace Cordova.Extension.Commands
 
             //DispatchMessage(PluginResult.Status.OK, eventArgs.ToJson(), true, ConfigureCallbackToken);
 
-            SpeechSynthesizer synth = new SpeechSynthesizer();
-            synth.SpeakTextAsync(string.Format("Time {0}, Distance {1}, Current Pace {2}, Average Pace {3}", eventArgs.TotalTime.ToString("mm:ss"),
-                        eventArgs.TotalDistance, eventArgs.CurrentPace, eventArgs.AveragePace));
+            
 
             //if (eventArgs.SpeachReportReady)
             //{
