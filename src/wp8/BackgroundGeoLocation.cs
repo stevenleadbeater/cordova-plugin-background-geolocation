@@ -225,7 +225,7 @@ namespace Cordova.Extension.Commands
             //DispatchMessage(PluginResult.Status.OK, eventArgs.ToJson(), true, ConfigureCallbackToken);
 
             SpeechSynthesizer synth = new SpeechSynthesizer();
-            await synth.SpeakTextAsync(string.Format("Time {0}, Distance {1}, Current Pace {2}, Average Pace {3}", eventArgs.TotalTime.ToString("mm:ss"),
+            synth.SpeakTextAsync(string.Format("Time {0}, Distance {1}, Current Pace {2}, Average Pace {3}", eventArgs.TotalTime.ToString("mm:ss"),
                         eventArgs.TotalDistance, eventArgs.CurrentPace, eventArgs.AveragePace));
 
             //if (eventArgs.SpeachReportReady)
