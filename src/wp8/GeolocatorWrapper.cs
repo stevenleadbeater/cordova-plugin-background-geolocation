@@ -152,7 +152,10 @@ namespace Cordova.Extension.Commands
             _positionPath.AddPosition(newPosition);
 
             var stationaryUpdateResult = StationaryUpdate(positionChangesEventArgs.Position, newPosition);
-            if (stationaryUpdateResult == StationaryUpdateResult.InStationary) return;
+            if (stationaryUpdateResult == StationaryUpdateResult.InStationary && !_useFixedTimeInterval)
+            {
+                return;
+            }
 
             var currentAvgSpeed = _positionPath.GetCurrentSpeed(TimeSpan.FromMilliseconds(_reportInterval * 5)); // avg speed of last 5 (at max) positions
 

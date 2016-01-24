@@ -14,15 +14,27 @@ namespace Cordova.Extension.Commands
 
             if(timeSpan >= new TimeSpan(1, 0, 0))
             {
-                returnValue += string.Format(" {0} hours ", timeSpan.ToString("%h"));
+                var hours = timeSpan.ToString("%h");
+                if (hours != "0")
+                {
+                    returnValue += string.Format(" {0} hours ", hours);
+                }
             }
             if (timeSpan >= new TimeSpan(0, 1, 0))
             {
-                returnValue += string.Format(" {0} minutes ", timeSpan.ToString("%m"));
+                var minutes = timeSpan.ToString("%m");
+                if (minutes != "0")
+                {
+                    returnValue += string.Format(" {0} minutes ", minutes);
+                }
             }
             if (timeSpan >= new TimeSpan(0, 0, 1))
             {
-                returnValue += string.Format(" {0} seconds ", timeSpan.ToString("%s"));
+                var seconds = timeSpan.ToString("%s");
+                if (seconds != "0")
+                {
+                    returnValue += string.Format(" {0} seconds ", seconds);
+                }
             }
 
             return returnValue;

@@ -221,17 +221,18 @@ namespace Cordova.Extension.Commands
                 DispatchMessage(PluginResult.Status.OK, string.Format("{0:0.}", BackgroundGeoLocationOptions.StationaryRadius), true, OnStationaryCallbackToken);
             else
                 DispatchMessage(PluginResult.Status.ERROR, "Null position received", true, ConfigureCallbackToken);
-
-            //DispatchMessage(PluginResult.Status.OK, eventArgs.ToJson(), true, ConfigureCallbackToken);
-
-
-
+            
             if (eventArgs.SpeachReportReady)
             {
                 if (_reportInMiles)
                 {
                     SpeechSynthesizer synth = new SpeechSynthesizer();
-                    await synth.SpeakTextAsync(string.Format("Time {0}", eventArgs.TotalTime.GetSpeechFormat()));
+                    await synth.SpeakTextAsync(string.Format("Time {0}, Total Distance {1} miles, Current Pace {2} minutes per mile, Average Pace {3} minutes per mile", 
+                        eventArgs.TotalTime.GetSpeechFormat(), 
+                        eventArgs.TotalDistance.ToString("0.0"),
+                        eventArgs.CurrentPace.ToString("0.0"),
+                        eventArgs.AveragePace.ToString("0.0")
+                        ));
 
                 }
             }
