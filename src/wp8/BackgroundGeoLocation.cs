@@ -213,10 +213,7 @@ namespace Cordova.Extension.Commands
                 return;
             }
 
-            SpeechSynthesizer synth = new SpeechSynthesizer();
-            await synth.SpeakTextAsync("Time");
-
-            //HandlePositionUpdateDebugData(eventArgs.PositionUpdateDebugData);
+            HandlePositionUpdateDebugData(eventArgs.PositionUpdateDebugData);
 
             if (eventArgs.Position != null)
                 DispatchMessage(PluginResult.Status.OK, eventArgs.Position.Coordinate.ToJson(), true, ConfigureCallbackToken);
@@ -227,17 +224,17 @@ namespace Cordova.Extension.Commands
 
             //DispatchMessage(PluginResult.Status.OK, eventArgs.ToJson(), true, ConfigureCallbackToken);
 
-            
 
-            //if (eventArgs.SpeachReportReady)
-            //{
-                
 
-            //    if (_reportInMiles)
-            //    {
-                    
-            //    }
-            //}
+            if (eventArgs.SpeachReportReady)
+            {
+                if (_reportInMiles)
+                {
+                    SpeechSynthesizer synth = new SpeechSynthesizer();
+                    await synth.SpeakTextAsync("Time");
+
+                }
+            }
         }
 
         private void HandlePositionUpdateDebugData(PostionUpdateDebugData postionUpdateDebugData)
