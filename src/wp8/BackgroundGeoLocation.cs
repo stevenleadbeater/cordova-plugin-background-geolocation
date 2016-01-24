@@ -231,7 +231,7 @@ namespace Cordova.Extension.Commands
                 if (_reportInMiles)
                 {
                     SpeechSynthesizer synth = new SpeechSynthesizer();
-                    await synth.SpeakTextAsync("Time");
+                    await synth.SpeakTextAsync(string.Format("Time {0}", eventArgs.TotalTime.GetSpeechFormat()));
 
                 }
             }
