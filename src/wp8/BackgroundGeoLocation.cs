@@ -222,18 +222,21 @@ namespace Cordova.Extension.Commands
             else
                 DispatchMessage(PluginResult.Status.ERROR, "Null position received", true, ConfigureCallbackToken);
 
-            DispatchMessage(PluginResult.Status.OK, eventArgs.ToJson(), true, ConfigureCallbackToken);
+            //DispatchMessage(PluginResult.Status.OK, eventArgs.ToJson(), true, ConfigureCallbackToken);
 
-            if (eventArgs.SpeachReportReady)
-            {
-                SpeechSynthesizer synth = new SpeechSynthesizer();
-
-                if (_reportInMiles)
-                {
-                    synth.SpeakTextAsync(string.Format("Time {0}, Distance {1}, Current Pace {2}, Average Pace {3}", eventArgs.TotalTime.ToString("mm:ss"), 
+            SpeechSynthesizer synth = new SpeechSynthesizer();
+            await synth.SpeakTextAsync(string.Format("Time {0}, Distance {1}, Current Pace {2}, Average Pace {3}", eventArgs.TotalTime.ToString("mm:ss"),
                         eventArgs.TotalDistance, eventArgs.CurrentPace, eventArgs.AveragePace));
-                }
-            }
+
+            //if (eventArgs.SpeachReportReady)
+            //{
+                
+
+            //    if (_reportInMiles)
+            //    {
+                    
+            //    }
+            //}
         }
 
         private void HandlePositionUpdateDebugData(PostionUpdateDebugData postionUpdateDebugData)
