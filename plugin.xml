@@ -121,6 +121,7 @@
     <source-file src="src/wp8/PostionUpdateDebugData.cs" />
     <source-file src="src/wp8/StationaryManager.cs" />
     <source-file src="src/wp8/TimeSpanStringFormatters.cs" />
+    <source-file src="src/wp8/Notification.cs" />
   </platform>
 
 </plugin>
