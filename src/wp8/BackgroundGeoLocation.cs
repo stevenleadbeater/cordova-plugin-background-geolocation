@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Windows.Devices.Geolocation;
 using WPCordovaClassLib.Cordova;
@@ -468,7 +469,7 @@ namespace Cordova.Extension.Commands
                 parsingSucceeded = false;
             }
 
-            if (options.length > 24)
+            if (options.Length > 24)
             {
                 notifications = JsonHelper.Deserialize<Notification>(options[25]).ToList();
             }
@@ -476,6 +477,7 @@ namespace Cordova.Extension.Commands
             {
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for notifications: {0}", options[25])));
                 parsingSucceeded = false;
+                notifications = new List<Notification>();
             }
 
             if (!parsingSucceeded) return;
