@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Device.Location;
 using Windows.Devices.Geolocation;
 using Windows.Foundation;
