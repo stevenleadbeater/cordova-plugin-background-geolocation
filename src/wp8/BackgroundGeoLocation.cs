@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Windows.Devices.Geolocation;
 using WPCordovaClassLib.Cordova;
 using WPCordovaClassLib.Cordova.Commands;
@@ -36,6 +37,7 @@ namespace Cordova.Extension.Commands
         private bool _reportCurrentPace;
         private bool _reportAverageSpeed;
         private bool _reportCurrentSpeed;
+        private List<Notification> _notifications;
         
         private readonly IDebugNotifier _debugNotifier;
 
@@ -77,6 +79,7 @@ namespace Cordova.Extension.Commands
             bool reportAverageSpeed;
             bool reportCurrentSpeed;
             bool reportInMiles;
+            List<Notification> notifications;
 
             if (!double.TryParse(options[0], out stationaryRadius))
             {
@@ -154,6 +157,16 @@ namespace Cordova.Extension.Commands
                 parsingSucceeded = false;
             }
 
+            if(options.length > 24)
+            {
+                notifications = JsonHelper.Deserialize<Notification>(options[25]).ToList();
+            }
+            else
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for notifications: {0}", options[25])));
+                parsingSucceeded = false;
+            }
+
             _reportInMiles = reportInMiles;
             _intervalReportSeconds = intervalReportSeconds;
             _intervalReportMeters = intervalReportMeters;
@@ -163,6 +176,7 @@ namespace Cordova.Extension.Commands
             _reportCurrentPace = reportCurrentPace;
             _reportAverageSpeed = reportAverageSpeed;
             _reportCurrentSpeed = reportCurrentSpeed;
+            _notifications = notifications;
 
             return new BackgroundGeoLocationOptions
             {
@@ -181,7 +195,8 @@ namespace Cordova.Extension.Commands
                 ReportAveragePace = reportAveragePace,
                 ReportCurrentPace = reportCurrentPace,
                 ReportAverageSpeed = reportAverageSpeed,
-                ReportCurrentSpeed = reportCurrentSpeed
+                ReportCurrentSpeed = reportCurrentSpeed,
+                Notifications = notifications
             };
         }
 
@@ -213,7 +228,8 @@ namespace Cordova.Extension.Commands
                     BackgroundGeoLocationOptions.DistanceFilterInMeters, BackgroundGeoLocationOptions.StationaryRadius, BackgroundGeoLocationOptions.UseFixedTimeInterval, 
                     BackgroundGeoLocationOptions.IntervalReportSeconds, BackgroundGeoLocationOptions.IntervalReportMeters, BackgroundGeoLocationOptions.ReportTotalTime, 
                     BackgroundGeoLocationOptions.ReportTotalDistance, BackgroundGeoLocationOptions.ReportAveragePace, BackgroundGeoLocationOptions.ReportCurrentPace, 
-                    BackgroundGeoLocationOptions.ReportAverageSpeed, BackgroundGeoLocationOptions.ReportCurrentSpeed, BackgroundGeoLocationOptions.ReportInMiles);
+                    BackgroundGeoLocationOptions.ReportAverageSpeed, BackgroundGeoLocationOptions.ReportCurrentSpeed, BackgroundGeoLocationOptions.ReportInMiles,
+                    BackgroundGeoLocationOptions.Notifications);
                 Geolocator.PositionChanged += OnGeolocatorOnPositionChanged;
                 Geolocator.Start();
 
@@ -376,6 +392,7 @@ namespace Cordova.Extension.Commands
             bool reportAverageSpeed;
             bool reportCurrentSpeed;
             bool reportInMiles;
+            List<Notification> notifications;
 
             if (!double.TryParse(options[0], out stationaryRadius))
             {
@@ -447,6 +464,17 @@ namespace Cordova.Extension.Commands
                 DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for reportInMiles: {0}", options[24])));
                 parsingSucceeded = false;
             }
+
+            if (options.length > 24)
+            {
+                notifications = JsonHelper.Deserialize<Notification>(options[25]).ToList();
+            }
+            else
+            {
+                DispatchCommandResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION, string.Format("Invalid value for notifications: {0}", options[25])));
+                parsingSucceeded = false;
+            }
+
             if (!parsingSucceeded) return;
 
             _reportInMiles = reportInMiles;
@@ -458,6 +486,7 @@ namespace Cordova.Extension.Commands
             _reportCurrentPace = reportCurrentPace;
             _reportAverageSpeed = reportAverageSpeed;
             _reportCurrentSpeed = reportCurrentSpeed;
+            _notifications = notifications;
 
             BackgroundGeoLocationOptions.StationaryRadius = stationaryRadius;
             BackgroundGeoLocationOptions.DistanceFilterInMeters = distanceFilter;
@@ -473,9 +502,11 @@ namespace Cordova.Extension.Commands
             BackgroundGeoLocationOptions.ReportCurrentPace = reportCurrentPace;
             BackgroundGeoLocationOptions.ReportAverageSpeed = reportAverageSpeed;
             BackgroundGeoLocationOptions.ReportCurrentSpeed = reportCurrentSpeed;
+            BackgroundGeoLocationOptions.Notifications = notifications;
 
             Geolocator = new GeolocatorWrapper(desiredAccuracy, locationTimeout * 1000, distanceFilter, stationaryRadius, useFixedTimeInterval, intervalReportSeconds,
-                intervalReportMeters, reportTotalTime, reportTotalDistance, reportAveragePace, reportCurrentPace, reportAverageSpeed, reportCurrentSpeed, reportInMiles);
+                intervalReportMeters, reportTotalTime, reportTotalDistance, reportAveragePace, reportCurrentPace, reportAverageSpeed, reportCurrentSpeed, reportInMiles,
+                notifications);
             Geolocator.PositionChanged += OnGeolocatorOnPositionChanged;
             Geolocator.Start();
 

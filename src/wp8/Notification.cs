@@ -8,8 +8,8 @@ namespace Cordova.Extension.Commands
 {
     public class Notificaiton
     {
-        public int Index { get; set; }
-        public string Text { get; set; }
-        public int IntervalSeconds { get; set; }
+        public int index { get; set; }
+        public string text { get; set; }
+        public int intervalSeconds { get; set; }
     }
 }

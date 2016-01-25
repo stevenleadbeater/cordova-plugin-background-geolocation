@@ -188,10 +188,10 @@ namespace Cordova.Extension.Commands
                 PositionUpdateDebugData = PostionUpdateDebugData.ForNewPosition(positionChangesEventArgs, currentAvgSpeed, updateScaledDistanceFilterResult, Geolocator.ReportInterval, stationaryUpdateResult == StationaryUpdateResult.ExitedFromStationary)
             };
 
-            if(_reportedPositionsCount > 0 && (_notifications[_notificationIndex].IntervalSeconds >= _notificationOffsetSeconds))
+            if(_reportedPositionsCount > 0 && (_notifications[_notificationIndex].intervalSeconds >= _notificationOffsetSeconds))
             {
-                _notificationOffsetSeconds += _notifications[_notificationIndex].IntervalSeconds;
-                geolocatorWrapperPositionChangedEventArgs.NotiticationText = _notifications[_notificationIndex].Text;
+                _notificationOffsetSeconds += _notifications[_notificationIndex].intervalSeconds;
+                geolocatorWrapperPositionChangedEventArgs.NotiticationText = _notifications[_notificationIndex].text;
             }
 
             if (_intervalReportSeconds > 0 && ((_reportInterval / 1000) * _reportedIntervalsPositionsCount) == _intervalReportSeconds)

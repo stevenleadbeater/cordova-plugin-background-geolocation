@@ -21,5 +21,6 @@ namespace Cordova.Extension.Commands
         public bool ReportCurrentPace { get; set; }        
         public bool ReportAverageSpeed { get; set; }
         public bool ReportCurrentSpeed { get; set; }
+        public List<Notification> Notifications { get; set; }
     }
 }
