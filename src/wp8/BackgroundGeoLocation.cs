@@ -160,7 +160,7 @@ namespace Cordova.Extension.Commands
 
             if(options.Length > 24)
             {
-                notifications = JsonHelper.Deserialize<Notification>(options[25]).ToList();
+                notifications = JsonHelper.Deserialize<Notification[]>(options[25]).ToList();
             }
             else
             {
@@ -471,7 +471,7 @@ namespace Cordova.Extension.Commands
 
             if (options.Length > 24)
             {
-                notifications = JsonHelper.Deserialize<Notification>(options[25]).ToList();
+                notifications = JsonHelper.Deserialize<Notification[]>(options[25]).ToList();
             }
             else
             {
