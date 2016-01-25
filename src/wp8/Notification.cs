@@ -6,7 +6,7 @@ using WPCordovaClassLib.Cordova.Commands;
 
 namespace Cordova.Extension.Commands
 {
-    public class Notificaiton
+    public class Notification
     {
         public int index { get; set; }
         public string text { get; set; }
