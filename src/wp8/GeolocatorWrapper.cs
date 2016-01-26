@@ -202,7 +202,7 @@ namespace Cordova.Extension.Commands
                 file.Close();
             }
 
-            if (_reportedPositionsCount > 1 && (_notifications[_notificationIndex].intervalSeconds >= _notificationOffsetSeconds))
+            if (_reportedPositionsCount > 1 && ((_reportInterval / 1000) * _reportedIntervalsPositionsCount) >= (_notifications[_notificationIndex].intervalSeconds + _notificationOffsetSeconds))
             {
                 using (IsolatedStorageFileStream file = new IsolatedStorageFileStream("geoLocatorWrapperOutput.txt", FileMode.Append, FileAccess.Write, IsolatedStorageFile.GetUserStoreForApplication()))
                 {

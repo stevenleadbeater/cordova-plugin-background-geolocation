@@ -278,7 +278,7 @@ namespace Cordova.Extension.Commands
 
             try
             {
-                if (eventArgs.NotiticationText != "")
+                if (!string.IsNullOrEmpty(eventArgs.NotiticationText))
                 {
                     await synth.SpeakTextAsync(eventArgs.NotiticationText);
                 }
