@@ -97,23 +97,23 @@ namespace Cordova.Extension.Commands
             UInt32 intervalReportMeters, bool reportTotalTime, bool reportTotalDistance, bool reportAveragePace,
             bool reportCurrentPace, bool reportAverageSpeed, bool reportCurrentSpeed, bool reportInMiles, List<Notification> notifications)
         {
-            _desiredAccuracy = desiredAccuracy;
-            _reportInterval = reportInterval;
-            _distanceFilter = distanceFilter;
-            _stationaryRadius = stationaryRadius;
-            _positionPath = new PositionPath();
-            _stationaryManager = new StationaryManager(stationaryRadius);
-            _useFixedTimeInterval = useFixedTimeInterval;
+            _desiredAccuracy       = desiredAccuracy;
+            _reportInterval        = reportInterval;
+            _distanceFilter        = distanceFilter;
+            _stationaryRadius      = stationaryRadius;
+            _positionPath          = new PositionPath();
+            _stationaryManager     = new StationaryManager(stationaryRadius);
+            _useFixedTimeInterval  = useFixedTimeInterval;
             _intervalReportSeconds = intervalReportSeconds;
-            _intervalReportMeters = intervalReportMeters;
-            _reportTotalTime = reportTotalTime;
-            _reportTotalDistance = reportTotalDistance;
-            _reportAveragePace = reportAveragePace;
-            _reportCurrentPace = reportCurrentPace;
-            _reportAverageSpeed = reportAverageSpeed;
-            _reportCurrentSpeed = reportCurrentSpeed;
-            _reportInMiles = reportInMiles;
-            _notifications = notifications;
+            _intervalReportMeters  = intervalReportMeters;
+            _reportTotalTime       = reportTotalTime;
+            _reportTotalDistance   = reportTotalDistance;
+            _reportAveragePace     = reportAveragePace;
+            _reportCurrentPace     = reportCurrentPace;
+            _reportAverageSpeed    = reportAverageSpeed;
+            _reportCurrentSpeed    = reportCurrentSpeed;
+            _reportInMiles         = reportInMiles;
+            _notifications         = notifications;
         }
 
         public void Start()
@@ -123,10 +123,8 @@ namespace Cordova.Extension.Commands
             Geolocator = new Geolocator
             {
                 // MovementThreshold 0 by purpose, is taken care of by this wrapper using current speed, ScaledDistanceFilter and ReportInterval
-                MovementThreshold = default(double),
-
-                ReportInterval = _reportInterval,
-
+                MovementThreshold       = default(double),
+                ReportInterval          = _reportInterval,
                 DesiredAccuracyInMeters = _desiredAccuracy
             };
 
@@ -140,7 +138,7 @@ namespace Cordova.Extension.Commands
 
             Geolocator.PositionChanged -= OnGeolocatorPositionChanged;
             Geolocator = null;
-            IsActive = false;
+            IsActive   = false;
         }
 
         private void OnGeolocatorPositionChanged(Geolocator sender, PositionChangedEventArgs positionChangesEventArgs)
@@ -152,7 +150,7 @@ namespace Cordova.Extension.Commands
             }
 
             var newGeoCoordinate = new GeoCoordinate(positionChangesEventArgs.Position.Coordinate.Latitude, positionChangesEventArgs.Position.Coordinate.Longitude);
-            var newPosition = new Position(newGeoCoordinate, DateTime.Now, positionChangesEventArgs.Position.Coordinate.Accuracy);
+            var newPosition      = new Position(newGeoCoordinate, DateTime.Now, positionChangesEventArgs.Position.Coordinate.Accuracy);
 
             _positionPath.AddPosition(newPosition);
 
@@ -183,14 +181,14 @@ namespace Cordova.Extension.Commands
             var geolocatorWrapperPositionChangedEventArgs = new GeolocatorWrapperPositionChangedEventArgs
             {
                 GeolocatorLocationStatus = Geolocator.LocationStatus,
-                Position = positionChangesEventArgs.Position,
-                EnteredStationary = false,
-                PositionUpdateDebugData = PostionUpdateDebugData.ForNewPosition(positionChangesEventArgs, currentAvgSpeed, updateScaledDistanceFilterResult, Geolocator.ReportInterval, stationaryUpdateResult == StationaryUpdateResult.ExitedFromStationary)
+                Position                 = positionChangesEventArgs.Position,
+                EnteredStationary        = false,
+                PositionUpdateDebugData  = PostionUpdateDebugData.ForNewPosition(positionChangesEventArgs, currentAvgSpeed, updateScaledDistanceFilterResult, Geolocator.ReportInterval, stationaryUpdateResult == StationaryUpdateResult.ExitedFromStationary)
             };
 
-            if(_reportedPositionsCount > 1 && (_notifications[_notificationIndex].intervalSeconds >= (_notificationOffsetSeconds + (_reportInterval * _reportedPositionsCount))))
+            if(_reportedPositionsCount > 1 && (_notifications[_notificationIndex].intervalSeconds >= _notificationOffsetSeconds))
             {
-                _notificationOffsetSeconds += _notifications[_notificationIndex].intervalSeconds;
+                _notificationOffsetSeconds                                 += _notifications[_notificationIndex].intervalSeconds;
                 geolocatorWrapperPositionChangedEventArgs.NotiticationText = _notifications[_notificationIndex].text;
                 _notificationIndex++;
             }
@@ -277,8 +275,8 @@ namespace Cordova.Extension.Commands
             PositionChanged(this, new GeolocatorWrapperPositionChangedEventArgs
             {
                 GeolocatorLocationStatus = Geolocator.LocationStatus,
-                Position = geoPosition,
-                PositionUpdateDebugData =
+                Position                 = geoPosition,
+                PositionUpdateDebugData  =
                     PostionUpdateDebugData.ForStationaryUpdate((uint)newStationaryReportInterval,
                         _stationaryManager.GetDistanceToStationary(newPosition))
             });
@@ -294,9 +292,9 @@ namespace Cordova.Extension.Commands
 
         private UpdateScaledDistanceFilterResult UpdateScaledDistanceFilter(double? currentAvgSpeed, Geocoordinate geocoordinate)
         {
-            var result = new UpdateScaledDistanceFilterResult(_scaledDistanceFilter.HasValue ? _scaledDistanceFilter.Value : 0);
+            var result       = new UpdateScaledDistanceFilterResult(_scaledDistanceFilter.HasValue ? _scaledDistanceFilter.Value : 0);
             var lastPosition = _positionPath.GetLastPosition();
-            result.Distance = lastPosition.DinstanceToPrevious;
+            result.Distance  = lastPosition.DinstanceToPrevious;
 
             if (!lastPosition.Speed.HasValue || !currentAvgSpeed.HasValue)
             {
@@ -318,7 +316,7 @@ namespace Cordova.Extension.Commands
             }
 
             result.NewScaledDistanceFilter = CalculateNewScaledDistanceFilter(currentAvgSpeed.Value);
-            _scaledDistanceFilter = result.NewScaledDistanceFilter;
+            _scaledDistanceFilter          = result.NewScaledDistanceFilter;
             return result;
         }
 
@@ -331,14 +329,14 @@ namespace Cordova.Extension.Commands
             var tempGeolocator = new Geolocator
             {
                 MovementThreshold = 1,
-                ReportInterval = 1
+                ReportInterval    = 1
             };
             TypedEventHandler<Geolocator, PositionChangedEventArgs> dummyHandler = (sender, positionChangesEventArgs2) => { };
             tempGeolocator.PositionChanged += dummyHandler;
 
             // It is not allowed to change properties of Geolocator when eventhandlers are attached 
             Geolocator.PositionChanged -= OnGeolocatorPositionChanged;
-            Geolocator.ReportInterval = reportInterval;
+            Geolocator.ReportInterval   = reportInterval;
             Geolocator.PositionChanged += OnGeolocatorPositionChanged;
 
             tempGeolocator.PositionChanged -= dummyHandler;
@@ -347,11 +345,14 @@ namespace Cordova.Extension.Commands
         private double CalculateNewScaledDistanceFilter(double currentSpeed)
         {
             var newDistanceFilter = _distanceFilter;
-            if (currentSpeed > 100) return newDistanceFilter;
+            if (currentSpeed > 100)
+            {
+                return newDistanceFilter;
+            }
 
             var speedRoundedToNearesFive = RoundToNearestFactor(currentSpeed, 5);
-            var squareRouteOfSpeed = Math.Pow(speedRoundedToNearesFive, 2);
-            newDistanceFilter = squareRouteOfSpeed + newDistanceFilter;
+            var squareRouteOfSpeed       = Math.Pow(speedRoundedToNearesFive, 2);
+            newDistanceFilter            = squareRouteOfSpeed + newDistanceFilter;
 
             if (newDistanceFilter > 1000) newDistanceFilter = 1000;
 
