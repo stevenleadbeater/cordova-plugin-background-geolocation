@@ -197,6 +197,8 @@ namespace Cordova.Extension.Commands
                     writeFile.WriteLine("_notificationOffsetSeconds: " + _notificationOffsetSeconds);
                     writeFile.WriteLine("_notifications.Count: "       + _notifications.Count);
                     writeFile.WriteLine("_notifications[_notificationIndex].intervalSeconds: " + _notifications[_notificationIndex].intervalSeconds);
+                    writeFile.WriteLine("Current Time: " + (_reportInterval / 1000) * _reportedIntervalsPositionsCount);
+                    writeFile.WriteLine("Next Interval Time: " + (_notifications[_notificationIndex].intervalSeconds + _notificationOffsetSeconds));
                     writeFile.Close();
                 }
                 file.Close();
