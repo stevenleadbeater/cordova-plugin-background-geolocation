@@ -276,16 +276,32 @@ namespace Cordova.Extension.Commands
 
             SpeechSynthesizer synth = new SpeechSynthesizer();
 
-            if (eventArgs.NotiticationText != "")
+            try
             {
-                await synth.SpeakTextAsync(eventArgs.NotiticationText);
-            }
+                if (eventArgs.NotiticationText != "")
+                {
+                    await synth.SpeakTextAsync(eventArgs.NotiticationText);
+                }
 
-            if (eventArgs.SpeachReportReady)
+                if (eventArgs.SpeachReportReady)
+                {
+                    if (_reportInMiles)
+                    {
+                        await synth.SpeakTextAsync(GetSpeechStringMiles(eventArgs));
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                if (_reportInMiles)
-                {                    
-                    await synth.SpeakTextAsync(GetSpeechStringMiles(eventArgs));
+                using (IsolatedStorageFileStream file = new IsolatedStorageFileStream("backgroundGeoLocation.txt", FileMode.Append, FileAccess.Write, IsolatedStorageFile.GetUserStoreForApplication()))
+                {
+                    using (StreamWriter writeFile = new StreamWriter(file))
+                    {
+                        writeFile.WriteLine("Message: " + ex.Message);
+                        writeFile.WriteLine("StackTrace: " + ex.StackTrace);
+                        writeFile.Close();
+                    }
+                    file.Close();
                 }
             }
         }
