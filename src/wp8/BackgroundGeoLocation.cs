@@ -1,3 +1,5 @@
+using System.IO;
+using System.IO.IsolatedStorage;
 using System;
 using System.Linq;
 using System.Collections.Generic;
