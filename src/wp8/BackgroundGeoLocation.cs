@@ -162,18 +162,23 @@ namespace Cordova.Extension.Commands
 
             if(options.Length > 24)
             {
+                notifications = JsonHelper.Deserialize<Notification[]>(options[25]).ToList();
 
                 using (IsolatedStorageFileStream file = new IsolatedStorageFileStream("backgroundGeoLocation.txt", FileMode.Append, FileAccess.Write, IsolatedStorageFile.GetUserStoreForApplication()))
                 {
                     using (StreamWriter writeFile = new StreamWriter(file))
                     {
                         writeFile.WriteLine("options[25]: " + options[25]);
+                        foreach (var notification in notifications)
+                        {
+                            writeFile.WriteLine("notification index: " + notification.index);
+                            writeFile.WriteLine("notification text: " + notification.text);
+                            writeFile.WriteLine("notification intervalSeconds: " + notification.intervalSeconds);
+                        }
                         writeFile.Close();
                     }
                     file.Close();
                 }
-
-                notifications = JsonHelper.Deserialize<Notification[]>(options[25]).ToList();
             }
             else
             {

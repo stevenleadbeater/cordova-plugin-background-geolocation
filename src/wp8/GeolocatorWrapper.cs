@@ -195,6 +195,7 @@ namespace Cordova.Extension.Commands
                     writeFile.WriteLine("_reportedPositionsCount: "    + _reportedPositionsCount);
                     writeFile.WriteLine("_notificationIndex: "         + _notificationIndex);
                     writeFile.WriteLine("_notificationOffsetSeconds: " + _notificationOffsetSeconds);
+                    writeFile.WriteLine("_notifications.Count: "       + _notifications.Count);
                     writeFile.Close();
                 }
                 file.Close();
@@ -203,7 +204,7 @@ namespace Cordova.Extension.Commands
             if (_reportedPositionsCount > 1 && (_notifications[_notificationIndex].intervalSeconds >= _notificationOffsetSeconds))
             {
                 _notificationOffsetSeconds                                 += _notifications[_notificationIndex].intervalSeconds;
-                geolocatorWrapperPositionChangedEventArgs.NotiticationText = _notifications[_notificationIndex].text;
+                geolocatorWrapperPositionChangedEventArgs.NotiticationText  = _notifications[_notificationIndex].text;
                 _notificationIndex++;
             }
 
