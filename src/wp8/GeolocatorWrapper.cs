@@ -203,6 +203,16 @@ namespace Cordova.Extension.Commands
 
             if (_reportedPositionsCount > 1 && (_notifications[_notificationIndex].intervalSeconds >= _notificationOffsetSeconds))
             {
+                using (IsolatedStorageFileStream file = new IsolatedStorageFileStream("geoLocatorWrapperOutput.txt", FileMode.Append, FileAccess.Write, IsolatedStorageFile.GetUserStoreForApplication()))
+                {
+                    using (StreamWriter writeFile = new StreamWriter(file))
+                    {
+                        writeFile.WriteLine("_notifications[_notificationIndex].intervalSeconds: " + _notifications[_notificationIndex].intervalSeconds);
+                        writeFile.WriteLine("_notifications[_notificationIndex].text: " + _notifications[_notificationIndex].text);
+                        writeFile.Close();
+                    }
+                    file.Close();
+                }
                 _notificationOffsetSeconds                                 += _notifications[_notificationIndex].intervalSeconds;
                 geolocatorWrapperPositionChangedEventArgs.NotiticationText  = _notifications[_notificationIndex].text;
                 _notificationIndex++;
