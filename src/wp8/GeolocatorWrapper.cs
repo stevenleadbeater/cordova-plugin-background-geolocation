@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.IO;
+using System.IO.IsolatedStorage;
+using System;
 using System.Collections.Generic;
 using System.Device.Location;
 using Windows.Devices.Geolocation;
@@ -186,7 +188,19 @@ namespace Cordova.Extension.Commands
                 PositionUpdateDebugData  = PostionUpdateDebugData.ForNewPosition(positionChangesEventArgs, currentAvgSpeed, updateScaledDistanceFilterResult, Geolocator.ReportInterval, stationaryUpdateResult == StationaryUpdateResult.ExitedFromStationary)
             };
 
-            if(_reportedPositionsCount > 1 && (_notifications[_notificationIndex].intervalSeconds >= _notificationOffsetSeconds))
+            using (IsolatedStorageFileStream file = new IsolatedStorageFileStream("geoLocatorWrapperOutput.txt", FileMode.Append, FileAccess.Write, IsolatedStorageFile.GetUserStoreForApplication()))
+            {
+                using (StreamWriter writeFile = new StreamWriter(file))
+                {
+                    writeFile.WriteLine("_reportedPositionsCount: "    + _reportedPositionsCount);
+                    writeFile.WriteLine("_notificationIndex: "         + _notificationIndex);
+                    writeFile.WriteLine("_notificationOffsetSeconds: " + _notificationOffsetSeconds);
+                    writeFile.Close();
+                }
+                file.Close();
+            }
+
+            if (_reportedPositionsCount > 1 && (_notifications[_notificationIndex].intervalSeconds >= _notificationOffsetSeconds))
             {
                 _notificationOffsetSeconds                                 += _notifications[_notificationIndex].intervalSeconds;
                 geolocatorWrapperPositionChangedEventArgs.NotiticationText = _notifications[_notificationIndex].text;

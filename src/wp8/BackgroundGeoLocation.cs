@@ -160,6 +160,17 @@ namespace Cordova.Extension.Commands
 
             if(options.Length > 24)
             {
+
+                using (IsolatedStorageFileStream file = new IsolatedStorageFileStream("backgroundGeoLocation.txt", FileMode.Append, FileAccess.Write, IsolatedStorageFile.GetUserStoreForApplication()))
+                {
+                    using (StreamWriter writeFile = new StreamWriter(file))
+                    {
+                        writeFile.WriteLine("options[25]: " + options[25]);
+                        writeFile.Close();
+                    }
+                    file.Close();
+                }
+
                 notifications = JsonHelper.Deserialize<Notification[]>(options[25]).ToList();
             }
             else
