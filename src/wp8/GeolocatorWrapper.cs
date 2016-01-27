@@ -188,7 +188,7 @@ namespace Cordova.Extension.Commands
                 PositionUpdateDebugData  = PostionUpdateDebugData.ForNewPosition(positionChangesEventArgs, currentAvgSpeed, updateScaledDistanceFilterResult, Geolocator.ReportInterval, stationaryUpdateResult == StationaryUpdateResult.ExitedFromStationary)
             };
 
-            if (_notifications.Count < _notificationIndex)
+            if (_notificationIndex < _notifications.Count)
             {
                 using (IsolatedStorageFileStream file = new IsolatedStorageFileStream("geoLocatorWrapperOutput.txt", FileMode.Append, FileAccess.Write, IsolatedStorageFile.GetUserStoreForApplication()))
                 {
