@@ -188,37 +188,45 @@ namespace Cordova.Extension.Commands
                 PositionUpdateDebugData  = PostionUpdateDebugData.ForNewPosition(positionChangesEventArgs, currentAvgSpeed, updateScaledDistanceFilterResult, Geolocator.ReportInterval, stationaryUpdateResult == StationaryUpdateResult.ExitedFromStationary)
             };
 
-            using (IsolatedStorageFileStream file = new IsolatedStorageFileStream("geoLocatorWrapperOutput.txt", FileMode.Append, FileAccess.Write, IsolatedStorageFile.GetUserStoreForApplication()))
-            {
-                using (StreamWriter writeFile = new StreamWriter(file))
-                {
-                    writeFile.WriteLine("_reportedPositionsCount: "    + _reportedPositionsCount);
-                    writeFile.WriteLine("_notificationIndex: "         + _notificationIndex);
-                    writeFile.WriteLine("_notificationOffsetSeconds: " + _notificationOffsetSeconds);
-                    writeFile.WriteLine("_notifications.Count: "       + _notifications.Count);
-                    writeFile.WriteLine("_notifications[_notificationIndex].intervalSeconds: " + _notifications[_notificationIndex].intervalSeconds);
-                    writeFile.WriteLine("Current Time: " + (_reportInterval / 1000) * _reportedIntervalsPositionsCount);
-                    writeFile.WriteLine("Next Interval Time: " + (_notifications[_notificationIndex].intervalSeconds + _notificationOffsetSeconds));
-                    writeFile.Close();
-                }
-                file.Close();
-            }
-
-            if (_reportedPositionsCount > 1 && ((_reportInterval / 1000) * _reportedPositionsCount) >= (_notifications[_notificationIndex].intervalSeconds + _notificationOffsetSeconds))
+            if (_notifications.Count < _notificationIndex)
             {
                 using (IsolatedStorageFileStream file = new IsolatedStorageFileStream("geoLocatorWrapperOutput.txt", FileMode.Append, FileAccess.Write, IsolatedStorageFile.GetUserStoreForApplication()))
                 {
                     using (StreamWriter writeFile = new StreamWriter(file))
                     {
-                        writeFile.WriteLine("_notifications[_notificationIndex].text: " + _notifications[_notificationIndex].text);
+                        writeFile.WriteLine("_reportedPositionsCount: " + _reportedPositionsCount);
+                        writeFile.WriteLine("_notificationIndex: " + _notificationIndex);
+                        writeFile.WriteLine("_notificationOffsetSeconds: " + _notificationOffsetSeconds);
+                        writeFile.WriteLine("_notifications.Count: " + _notifications.Count);
+                        writeFile.WriteLine("_notifications[_notificationIndex].intervalSeconds: " + _notifications[_notificationIndex].intervalSeconds);
+                        writeFile.WriteLine("Current Time: " + (_reportInterval / 1000) * _reportedIntervalsPositionsCount);
+                        writeFile.WriteLine("Next Interval Time: " + (_notifications[_notificationIndex].intervalSeconds + _notificationOffsetSeconds));
                         writeFile.Close();
                     }
                     file.Close();
                 }
-                _notificationOffsetSeconds                                 += _notifications[_notificationIndex].intervalSeconds;
-                geolocatorWrapperPositionChangedEventArgs.NotiticationText  = _notifications[_notificationIndex].text;
-                _notificationIndex++;
-            } else
+
+                if (_reportedPositionsCount > 1 && ((_reportInterval / 1000) * _reportedPositionsCount) >= (_notifications[_notificationIndex].intervalSeconds + _notificationOffsetSeconds))
+                {
+                    using (IsolatedStorageFileStream file = new IsolatedStorageFileStream("geoLocatorWrapperOutput.txt", FileMode.Append, FileAccess.Write, IsolatedStorageFile.GetUserStoreForApplication()))
+                    {
+                        using (StreamWriter writeFile = new StreamWriter(file))
+                        {
+                            writeFile.WriteLine("_notifications[_notificationIndex].text: " + _notifications[_notificationIndex].text);
+                            writeFile.Close();
+                        }
+                        file.Close();
+                    }
+                    _notificationOffsetSeconds += _notifications[_notificationIndex].intervalSeconds;
+                    geolocatorWrapperPositionChangedEventArgs.NotiticationText = _notifications[_notificationIndex].text;
+                    _notificationIndex++;
+                }
+                else
+                {
+                    geolocatorWrapperPositionChangedEventArgs.NotiticationText = "";
+                }
+            }
+            else
             {
                 geolocatorWrapperPositionChangedEventArgs.NotiticationText = "";
             }
